@@ -166,7 +166,7 @@ const PASSCODE_3 = "071025";
 ========================================= */
 
 const firebaseConfig = {
-  apiKey: "maine nhi bhaji",
+  apiKey: "AIzaSyCAEP1g8uJ7i4Cv0JiXHqMqdTF1frD59c4",
   authDomain: "buzy-f42e5.firebaseapp.com",
   projectId: "buzy-f42e5",
   storageBucket: "buzy-f42e5.firebasestorage.app",
