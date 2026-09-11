@@ -131,45 +131,16 @@ button{border:none;cursor:pointer;font-family:inherit}
 <script type="module">
 
 /* =========================================
-   PASSCODES
-========================================= */
-
-const PASSCODE_1 = "220208";
-const PASSCODE_2 = "100407";
-const PASSCODE_3 = "071025";
-
-/* =========================================
-   FIREBASE CONFIG
-   Paste your Firebase config here
-========================================= */
-
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCAEP1g8uJ7i4Cv0JiXHqMqdTF1frD59c4",
-  authDomain: "buzy-f42e5.firebaseapp.com",
-  projectId: "buzy-f42e5",
-  storageBucket: "buzy-f42e5.firebasestorage.app",
-  messagingSenderId: "966470789515",
-  appId: "1:966470789515:web:27c49a58934cf0c2f0a78e",
-  measurementId: "G-45DM8GH4NK"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-
-/* =========================================
    FIREBASE IMPORTS
 ========================================= */
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+
+import {
+  getAuth,
+  signInAnonymously
+} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
 import {
   getFirestore,
   collection,
@@ -180,87 +151,189 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
+
+/* =========================================
+   PASSCODES
+========================================= */
+
+const PASSCODE_1 = "220208";
+const PASSCODE_2 = "100407";
+const PASSCODE_3 = "071025";
+
+
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
+
+const firebaseConfig = {
+  apiKey: "maine nhi bhaji",
+  authDomain: "buzy-f42e5.firebaseapp.com",
+  projectId: "buzy-f42e5",
+  storageBucket: "buzy-f42e5.firebasestorage.app",
+  messagingSenderId: "966470789515",
+  appId: "1:966470789515:web:27c49a58934cf0c2f0a78e",
+  measurementId: "G-45DM8GH4NK"
+};
+
+
+/* =========================================
+   INITIALIZE FIREBASE
+========================================= */
+
 const app = initializeApp(firebaseConfig);
+
+const auth = getAuth(app);
 const db = getFirestore(app);
 
 const messagesRef = collection(db, "mrPagalMessages");
 
+
+/* =========================================
+   ANONYMOUS LOGIN
+========================================= */
+
+try {
+  await signInAnonymously(auth);
+  console.log("Firebase anonymous authentication successful.");
+} catch (error) {
+  console.error("Firebase authentication error:", error);
+}
+
+
+/* =========================================
+   PASSCODE SYSTEM
+========================================= */
+
 let currentStep = 1;
 
-function checkStep(step) {
+window.checkStep = function(step) {
+
   const input = document.getElementById("code" + step).value;
   const error = document.getElementById("error" + step);
 
   let correctCode;
+
   if (step === 1) correctCode = PASSCODE_1;
   if (step === 2) correctCode = PASSCODE_2;
   if (step === 3) correctCode = PASSCODE_3;
 
   if (input === correctCode) {
+
     error.textContent = "";
 
     if (step < 3) {
+
       document.getElementById("step" + step).classList.remove("active");
       document.getElementById("step" + (step + 1)).classList.add("active");
+
       document.querySelectorAll(".progress span")[step].classList.add("active");
+
       currentStep++;
+
     } else {
+
       unlockApp();
+
     }
+
   } else {
+
     error.textContent = "Wrong code. Access cancelled. ❌";
+
     setTimeout(() => location.reload(), 1200);
+
   }
-}
+};
+
+
+/* =========================================
+   UNLOCK APP
+========================================= */
 
 function unlockApp() {
+
   document.getElementById("lockScreen").style.display = "none";
   document.getElementById("verifiedPopup").style.display = "flex";
 
   setTimeout(() => {
+
     document.getElementById("verifiedPopup").style.display = "none";
     document.getElementById("chatApp").style.display = "flex";
+
     loadMessages();
+
   }, 2200);
 }
 
-function lockAgain() {
-  location.reload();
-}
 
 /* =========================================
-   ONLINE CHAT
+   LOCK AGAIN
 ========================================= */
 
-async function sendMessage() {
+window.lockAgain = function() {
+  location.reload();
+};
+
+
+/* =========================================
+   SEND MESSAGE
+========================================= */
+
+window.sendMessage = async function() {
+
   const input = document.getElementById("messageInput");
   const text = input.value.trim();
 
   if (text === "") return;
 
+  if (!auth.currentUser) {
+    alert("Firebase authentication is not ready.");
+    return;
+  }
+
   try {
+
     await addDoc(messagesRef, {
+
       text: text,
+
+      senderId: auth.currentUser.uid,
+
       time: new Date().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit"
       }),
+
       createdAt: serverTimestamp()
+
     });
 
     input.value = "";
+
   } catch (error) {
-    alert("Message send nahi hua. Firebase config check karo.");
+
+    alert("Message send nahi hua. Firebase check karo.");
     console.error(error);
+
   }
-}
+};
+
+
+/* =========================================
+   LOAD MESSAGES
+========================================= */
 
 function loadMessages() {
+
   const chatArea = document.getElementById("chatArea");
 
-  const q = query(messagesRef, orderBy("createdAt", "asc"));
+  const q = query(
+    messagesRef,
+    orderBy("createdAt", "asc")
+  );
 
   onSnapshot(q, (snapshot) => {
+
     chatArea.innerHTML = `
       <div class="welcome">
         ✨ Your private space ✨<br>
@@ -269,19 +342,27 @@ function loadMessages() {
     `;
 
     if (snapshot.empty) {
+
       chatArea.innerHTML += `
         <div class="empty">
           No messages yet...<br>
           Start your little conversation 💌
         </div>
       `;
+
     }
 
     snapshot.forEach((doc) => {
+
       const msg = doc.data();
 
       const div = document.createElement("div");
-      div.className = "message sent";
+
+      if (msg.senderId === auth.currentUser?.uid) {
+        div.className = "message sent";
+      } else {
+        div.className = "message received";
+      }
 
       const text = document.createElement("span");
       text.textContent = msg.text;
@@ -292,33 +373,61 @@ function loadMessages() {
 
       div.appendChild(text);
       div.appendChild(time);
+
       chatArea.appendChild(div);
+
     });
 
     chatArea.scrollTop = chatArea.scrollHeight;
+
+  }, (error) => {
+
+    console.error("Firestore error:", error);
+    alert("Messages load nahi ho rahe. Firestore Rules check karo.");
+
   });
 }
 
+
+/* =========================================
+   ENTER TO SEND
+========================================= */
+
 document.getElementById("messageInput").addEventListener("keydown", function(e) {
-  if (e.key === "Enter") sendMessage();
+
+  if (e.key === "Enter") {
+    sendMessage();
+  }
+
 });
+
 
 /* =========================================
    FLASHING STARS
 ========================================= */
 
 for (let i = 0; i < 35; i++) {
+
   const star = document.createElement("div");
+
   star.className = "star";
   star.innerHTML = "✦";
+
   star.style.left = Math.random() * 100 + "%";
   star.style.top = Math.random() * 100 + "%";
-  star.style.fontSize = (Math.random() * 10 + 5) + "px";
-  star.style.animationDelay = Math.random() * 3 + "s";
+
+  star.style.fontSize =
+    (Math.random() * 10 + 5) + "px";
+
+  star.style.animationDelay =
+    Math.random() * 3 + "s";
+
   document.getElementById("stars").appendChild(star);
+
 }
 
 </script>
+
 </body>
 </html>
 ```
