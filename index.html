@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -692,17 +691,14 @@ const db = getFirestore(app);
 
 
 /* =========================================
-   IMPORTANT:
-   ONE FIXED PRIVATE CHAT ROOM
+   FIREBASE CHAT COLLECTION
+   IMPORTANT: Keep using the OLD collection
+   so all existing messages remain visible.
 ========================================= */
-
-const CHAT_ROOM_ID = "mr-pagal-private-room";
 
 const messagesRef = collection(
   db,
-  "chatRooms",
-  CHAT_ROOM_ID,
-  "messages"
+  "mrPagalMessages"
 );
 
 
@@ -1329,5 +1325,3 @@ window.addEventListener(
 </script>
 
 </body>
-</html>
-```
