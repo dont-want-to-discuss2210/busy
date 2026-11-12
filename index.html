@@ -60,11 +60,19 @@ body:after{
 }
 
 @keyframes twinkle{
-  from{opacity:.15;transform:scale(.8)}
-  to{opacity:.8;transform:scale(1.2)}
+  from{
+    opacity:.15;
+    transform:scale(.8);
+  }
+  to{
+    opacity:.8;
+    transform:scale(1.2);
+  }
 }
 
-/* LOCK SCREEN */
+/* ================================
+   LOCK SCREEN
+================================ */
 
 #lockScreen{
   position:fixed;
@@ -95,12 +103,29 @@ body:after{
   animation:pulse 2s infinite;
 }
 
-@keyframes pulse{50%{transform:scale(1.08)}}
+@keyframes pulse{
+  50%{
+    transform:scale(1.08);
+  }
+}
 
-.lockBox h1{margin:5px 0;font-size:25px}
-.lockBox p{color:#cfc5d9;font-size:13px}
-.step{display:none}
-.step.active{display:block}
+.lockBox h1{
+  margin:5px 0;
+  font-size:25px;
+}
+
+.lockBox p{
+  color:#cfc5d9;
+  font-size:13px;
+}
+
+.step{
+  display:none;
+}
+
+.step.active{
+  display:block;
+}
 
 .stepTitle{
   color:#ff9bc9;
@@ -164,9 +189,13 @@ button{
   border-radius:10px;
 }
 
-.progress span.active{background:#ff5fa8}
+.progress span.active{
+  background:#ff5fa8;
+}
 
-/* VERIFIED POPUP */
+/* ================================
+   VERIFIED POPUP
+================================ */
 
 #verifiedPopup{
   display:none;
@@ -190,15 +219,34 @@ button{
 }
 
 @keyframes popupIn{
-  from{transform:scale(.7);opacity:0}
-  to{transform:scale(1);opacity:1}
+  from{
+    transform:scale(.7);
+    opacity:0;
+  }
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
 }
 
-.popup .heart{font-size:55px}
-.popup h2{color:#ff9dca;font-size:22px;margin:10px 0}
-.popup p{color:#d8c9df;font-size:13px}
+.popup .heart{
+  font-size:55px;
+}
 
-/* CHAT APP */
+.popup h2{
+  color:#ff9dca;
+  font-size:22px;
+  margin:10px 0;
+}
+
+.popup p{
+  color:#d8c9df;
+  font-size:13px;
+}
+
+/* ================================
+   CHAT APP
+================================ */
 
 #chatApp{
   display:none;
@@ -238,8 +286,15 @@ button{
   box-shadow:0 0 20px rgba(255,79,163,.2);
 }
 
-.profile h3{margin:0;font-size:15px}
-.profile small{color:#9edfbf;font-size:11px}
+.profile h3{
+  margin:0;
+  font-size:15px;
+}
+
+.profile small{
+  color:#9edfbf;
+  font-size:11px;
+}
 
 .lockBtn{
   background:#2a1839;
@@ -273,12 +328,17 @@ button{
   line-height:1.5;
   word-wrap:break-word;
   animation:messageIn .25s ease;
-  position:relative;
 }
 
 @keyframes messageIn{
-  from{opacity:0;transform:translateY(8px)}
-  to{opacity:1;transform:translateY(0)}
+  from{
+    opacity:0;
+    transform:translateY(8px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
 }
 
 .message.sent{
@@ -294,7 +354,9 @@ button{
   border-bottom-left-radius:5px;
 }
 
-.messageText{display:block}
+.messageText{
+  display:block;
+}
 
 .time{
   display:block;
@@ -328,7 +390,10 @@ button{
   font-size:20px;
 }
 
-.sendBtn:disabled{opacity:.5;cursor:not-allowed}
+.sendBtn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
 
 .empty{
   text-align:center;
@@ -350,130 +415,22 @@ button{
   margin:auto;
 }
 
-/* NEW FEATURES */
-
-.headerActions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.backupBtn{
-  background:#382044;
-  color:#ffd7ed;
-  padding:9px 11px;
-  border-radius:10px;
-  font-size:11px;
-}
-
-.dateDivider{
-  align-self:center;
-  margin:10px 0 3px;
-  padding:5px 12px;
-  border-radius:20px;
-  background:#291936;
-  color:#d8bfdc;
-  font-size:10px;
-  border:1px solid #493052;
-}
-
-.replyQuote{
-  display:block;
-  width:100%;
-  text-align:left;
-  margin:0 0 8px;
-  padding:7px 9px;
-  border-left:3px solid #ff9bc9;
-  border-radius:6px;
-  background:rgba(0,0,0,.17);
-  color:#f6d9eb;
-  font-size:11px;
-  cursor:pointer;
-  overflow-wrap:anywhere;
-}
-
-.replyQuote strong{
-  display:block;
-  font-size:10px;
-  color:#ffc0df;
-  margin-bottom:2px;
-}
-
-.replyBtn{
-  display:block;
-  margin:7px 0 0 auto;
-  padding:3px 7px;
-  border-radius:7px;
-  background:rgba(255,255,255,.12);
-  color:#ffe0f0;
-  font-size:10px;
-}
-
-.message.received .replyBtn{
-  margin-left:0;
-  margin-right:auto;
-}
-
-.message.highlightMessage{
-  outline:2px solid #ffd0e8;
-  box-shadow:0 0 18px rgba(255,120,190,.35);
-}
-
-.replyComposer{
-  padding:9px 14px;
-  background:#24142f;
-  border-top:1px solid rgba(255,255,255,.08);
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.replyComposerContent{
-  min-width:0;
-  flex:1;
-  border-left:3px solid #ff82bc;
-  padding-left:9px;
-  display:flex;
-  flex-direction:column;
-  gap:2px;
-}
-
-.replyComposerContent strong{
-  font-size:10px;
-  color:#ffacd0;
-}
-
-.replyComposerContent span{
-  font-size:11px;
-  color:#e5d1eb;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.cancelReplyBtn{
-  background:transparent;
-  color:#e9cde5;
-  padding:7px;
-}
-
-.backupNote{
-  font-size:10px;
-  color:#bda9c8;
-  text-align:center;
-  padding:5px 10px;
-}
-
 @media(max-width:500px){
-  .headerActions{gap:5px}
-  .backupBtn,.lockBtn{padding:8px 9px;font-size:10px}
-  .chatHeader{gap:8px}
-  .profile{gap:8px}
-  .profile h3{font-size:13px}
-  .chatHeader{padding:15px}
-  .chatArea{padding:20px 12px}
-  .message{max-width:85%}
-  .lockBox{padding:30px 20px}
+  .chatHeader{
+    padding:15px;
+  }
+
+  .chatArea{
+    padding:20px 12px;
+  }
+
+  .message{
+    max-width:85%;
+  }
+
+  .lockBox{
+    padding:30px 20px;
+  }
 }
 </style>
 </head>
@@ -482,12 +439,18 @@ button{
 
 <div class="stars" id="stars"></div>
 
-<!-- LOCK SCREEN -->
+<!-- ================================
+     LOCK SCREEN
+================================ -->
 
 <div id="lockScreen">
+
   <div class="lockBox">
+
     <div class="lockIcon">🔐</div>
+
     <h1>Private Space 💗</h1>
+
     <p>Only two special people are allowed here.</p>
 
     <div class="progress">
@@ -497,81 +460,179 @@ button{
     </div>
 
     <div class="step active" id="step1">
-      <div class="stepTitle">🔑 Enter the first passcode</div>
-      <input type="password" id="code1" placeholder="••••••" maxlength="6" autocomplete="off">
-      <button class="unlockBtn" onclick="checkStep(1)">Continue 💗</button>
+
+      <div class="stepTitle">
+        🔑 Enter the first passcode
+      </div>
+
+      <input
+        type="password"
+        id="code1"
+        placeholder="••••••"
+        maxlength="6"
+        autocomplete="off"
+      >
+
+      <button
+        class="unlockBtn"
+        onclick="checkStep(1)"
+      >
+        Continue 💗
+      </button>
+
       <div class="error" id="error1"></div>
+
     </div>
 
     <div class="step" id="step2">
-      <div class="stepTitle">🎂 When is her birthday?</div>
-      <input type="password" id="code2" placeholder="••••••" maxlength="6" autocomplete="off">
-      <button class="unlockBtn" onclick="checkStep(2)">Continue 💗</button>
+
+      <div class="stepTitle">
+        🎂 When is her birthday?
+      </div>
+
+      <input
+        type="password"
+        id="code2"
+        placeholder="••••••"
+        maxlength="6"
+        autocomplete="off"
+      >
+
+      <button
+        class="unlockBtn"
+        onclick="checkStep(2)"
+      >
+        Continue 💗
+      </button>
+
       <div class="error" id="error2"></div>
+
     </div>
 
     <div class="step" id="step3">
-      <div class="stepTitle">💍 On which date did you collaborate in October?</div>
-      <input type="password" id="code3" placeholder="••••••" maxlength="6" autocomplete="off">
-      <button class="unlockBtn" onclick="checkStep(3)">Unlock Our Space 💗</button>
+
+      <div class="stepTitle">
+        💍 On which date did you collaborate in October?
+      </div>
+
+      <input
+        type="password"
+        id="code3"
+        placeholder="••••••"
+        maxlength="6"
+        autocomplete="off"
+      >
+
+      <button
+        class="unlockBtn"
+        onclick="checkStep(3)"
+      >
+        Unlock Our Space 💗
+      </button>
+
       <div class="error" id="error3"></div>
+
     </div>
+
   </div>
+
 </div>
 
-<!-- VERIFIED POPUP -->
+<!-- ================================
+     VERIFIED POPUP
+================================ -->
 
 <div id="verifiedPopup">
+
   <div class="popup">
+
     <div class="heart">💗</div>
+
     <h2>MR PAGAL IS VERIFIED ✨</h2>
+
     <p>Welcome to your little private world.</p>
+
   </div>
+
 </div>
 
-<!-- CHAT APP -->
+<!-- ================================
+     CHAT APP
+================================ -->
 
 <div id="chatApp">
+
   <div class="chatHeader">
+
     <div class="profile">
-      <div class="avatar">💗</div>
-      <div>
-        <h3>MR PAGAL ✨</h3>
-        <small>● Private & Verified</small>
+
+      <div class="avatar">
+        💗
       </div>
+
+      <div>
+
+        <h3>
+          MR PAGAL ✨
+        </h3>
+
+        <small>
+          ● Private & Verified
+        </small>
+
+      </div>
+
     </div>
 
-    <div class="headerActions">
-      <button class="backupBtn" onclick="downloadChatBackup()" title="Download chat history backup">⬇ Backup</button>
-      <button class="lockBtn" onclick="lockAgain()">🔒 Lock</button>
-    </div>
+    <button
+      class="lockBtn"
+      onclick="lockAgain()"
+    >
+      🔒 Lock
+    </button>
+
   </div>
 
   <div class="chatArea" id="chatArea">
+
     <div class="welcome">
-      ✨ Your private space ✨<br>
+      ✨ Your private space ✨
+      <br>
       Messages are saved online.
     </div>
-    <div class="loading">Connecting to your private chat...</div>
-  </div>
 
-  <div id="replyComposer" class="replyComposer" style="display:none;">
-    <div class="replyComposerContent">
-      <strong>↩ Replying to</strong>
-      <span id="replyComposerText"></span>
+    <div class="loading">
+      Connecting to your private chat...
     </div>
-    <button class="cancelReplyBtn" onclick="cancelReply()" aria-label="Cancel reply">✕</button>
+
   </div>
 
   <div class="chatInput">
-    <input type="text" id="messageInput" placeholder="Write something sweet... 💌" autocomplete="off">
-    <button class="sendBtn" id="sendButton" onclick="sendMessage()">➤</button>
+
+    <input
+      type="text"
+      id="messageInput"
+      placeholder="Write something sweet... 💌"
+      autocomplete="off"
+    >
+
+    <button
+      class="sendBtn"
+      id="sendButton"
+      onclick="sendMessage()"
+    >
+      ➤
+    </button>
+
   </div>
+
 </div>
 
 <script type="module">
 
-/* FIREBASE IMPORTS */
+/* =========================================
+   FIREBASE IMPORTS
+========================================= */
 
 import {
   initializeApp
@@ -594,16 +655,18 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 
-/* PASSCODES */
+/* =========================================
+   PASSCODES
+========================================= */
 
 const PASSCODE_1 = "220208";
 const PASSCODE_2 = "100407";
 const PASSCODE_3 = "071024";
 
-const TIME_ZONE = "Asia/Karachi";
 
-
-/* ORIGINAL FIREBASE CONFIG */
+/* =========================================
+   FIREBASE CONFIG
+========================================= */
 
 const firebaseConfig = {
   apiKey: "AIzaSyCAEP1g8uJ7i4Cv0JiXHqMqdTF1frD59c4",
@@ -616,647 +679,612 @@ const firebaseConfig = {
 };
 
 
-/* INITIALIZE FIREBASE */
+/* =========================================
+   INITIALIZE FIREBASE
+========================================= */
 
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
 
-/* KEEP THE ORIGINAL COLLECTION */
+/* =========================================
+   FIREBASE CHAT COLLECTION
+   IMPORTANT: Keep using the OLD collection
+   so all existing messages remain visible.
+========================================= */
 
-const messagesRef = collection(db, "mrPagalMessages");
+const messagesRef = collection(
+  db,
+  "mrPagalMessages"
+);
 
 
-/* DEVICE ID */
+/* =========================================
+   LOCAL DEVICE ID
+========================================= */
+
+/*
+   This ID identifies this browser/device.
+
+   It is NOT used to disconnect anyone.
+   Each device gets its own ID.
+*/
 
 let deviceId = localStorage.getItem("mrPagalDeviceId");
 
 if (!deviceId) {
-  deviceId = "device_" + Date.now() + "_" +
-    Math.random().toString(36).substring(2, 10);
 
-  localStorage.setItem("mrPagalDeviceId", deviceId);
+  deviceId =
+    "device_" +
+    Date.now() +
+    "_" +
+    Math.random()
+      .toString(36)
+      .substring(2, 10);
+
+  localStorage.setItem(
+    "mrPagalDeviceId",
+    deviceId
+  );
 }
 
 
-/* GLOBAL VARIABLES */
+/* =========================================
+   FIREBASE AUTH STATE
+========================================= */
 
 let firebaseReady = false;
+
 let currentUser = null;
-let unsubscribeMessages = null;
-let loadedMessages = [];
-let replyTarget = null;
-
-
-
-/* AUTH STATE */
 
 onAuthStateChanged(auth, (user) => {
+
   if (user) {
+
     currentUser = user;
+
     firebaseReady = true;
-    console.log("Firebase connected:", user.uid);
-  } else {
-    console.log("Firebase authentication pending...");
+
+    console.log(
+      "Firebase user connected:",
+      user.uid
+    );
+
   }
+
 });
 
 
-/* ANONYMOUS LOGIN */
+/* =========================================
+   ANONYMOUS LOGIN
+========================================= */
 
 async function initializeAuthentication() {
+
   try {
-    // Already logged in?
-    if (auth.currentUser) {
-      currentUser = auth.currentUser;
-      firebaseReady = true;
-      return;
-    }
 
-    // Sign in anonymously
-    const result = await signInAnonymously(auth);
+    await signInAnonymously(auth);
 
-    // Set user immediately
-    currentUser = result.user;
-    firebaseReady = true;
-
-    console.log("Anonymous login successful:", currentUser.uid);
+    console.log(
+      "Firebase anonymous authentication successful."
+    );
 
   } catch (error) {
-    firebaseReady = false;
-    currentUser = null;
 
-    console.error("Firebase AUTH ERROR:", error.code, error.message);
+    console.error(
+      "Firebase authentication error:",
+      error
+    );
 
     alert(
-      "Firebase Login Failed!\n" +
-      "Error: " + error.code + "\n" +
-      error.message
+      "Firebase login nahi ho saka. " +
+      "Firebase Authentication mein Anonymous sign-in enable karo."
     );
+
   }
+
 }
 
 initializeAuthentication();
 
 
-
-/* PASSCODE SYSTEM */
+/* =========================================
+   PASSCODE SYSTEM
+========================================= */
 
 let currentStep = 1;
 
 window.checkStep = function(step) {
-  const input = document.getElementById("code" + step).value.trim();
-  const error = document.getElementById("error" + step);
 
-  const correctCode =
-    step === 1 ? PASSCODE_1 :
-    step === 2 ? PASSCODE_2 :
-    PASSCODE_3;
+  const input =
+    document.getElementById(
+      "code" + step
+    ).value.trim();
+
+  const error =
+    document.getElementById(
+      "error" + step
+    );
+
+  let correctCode = "";
+
+  if (step === 1) {
+    correctCode = PASSCODE_1;
+  }
+
+  if (step === 2) {
+    correctCode = PASSCODE_2;
+  }
+
+  if (step === 3) {
+    correctCode = PASSCODE_3;
+  }
+
 
   if (input === correctCode) {
+
     error.textContent = "";
 
-    if (step < 3) {
-      document.getElementById("step" + step).classList.remove("active");
-      document.getElementById("step" + (step + 1)).classList.add("active");
 
-      document.querySelectorAll(".progress span")[step].classList.add("active");
+    if (step < 3) {
+
+      document
+        .getElementById("step" + step)
+        .classList.remove("active");
+
+      document
+        .getElementById("step" + (step + 1))
+        .classList.add("active");
+
+      document
+        .querySelectorAll(".progress span")[step]
+        .classList.add("active");
 
       currentStep++;
+
     } else {
+
       unlockApp();
+
     }
+
   } else {
-    error.textContent = "Wrong code. Access cancelled. ❌";
-    setTimeout(() => location.reload(), 1200);
+
+    error.textContent =
+      "Wrong code. Access cancelled. ❌";
+
+    setTimeout(() => {
+
+      location.reload();
+
+    }, 1200);
+
   }
+
 };
 
 
-/* UNLOCK APP */
+/* =========================================
+   UNLOCK APP
+========================================= */
 
 function unlockApp() {
-  document.getElementById("lockScreen").style.display = "none";
-  document.getElementById("verifiedPopup").style.display = "flex";
+
+  document
+    .getElementById("lockScreen")
+    .style.display = "none";
+
+  document
+    .getElementById("verifiedPopup")
+    .style.display = "flex";
+
 
   setTimeout(() => {
-    document.getElementById("verifiedPopup").style.display = "none";
-    document.getElementById("chatApp").style.display = "flex";
+
+    document
+      .getElementById("verifiedPopup")
+      .style.display = "none";
+
+    document
+      .getElementById("chatApp")
+      .style.display = "flex";
+
     loadMessages();
+
   }, 2200);
+
 }
 
 
-/* LOCK AGAIN */
+/* =========================================
+   LOCK AGAIN
+========================================= */
 
 window.lockAgain = function() {
+
+  /*
+     This only locks THIS device.
+
+     It does NOT affect the other person's device.
+  */
+
   location.reload();
+
 };
 
 
-/* WAIT FOR FIREBASE AUTH */
+/* =========================================
+   WAIT FOR FIREBASE AUTH
+========================================= */
 
 function waitForFirebase() {
+
   return new Promise((resolve, reject) => {
+
     if (firebaseReady && currentUser) {
-      return resolve(currentUser);
+
+      resolve(currentUser);
+
+      return;
+
     }
 
     let attempts = 0;
 
     const timer = setInterval(() => {
+
       attempts++;
 
       if (firebaseReady && currentUser) {
+
         clearInterval(timer);
+
         resolve(currentUser);
+
       }
 
       if (attempts >= 100) {
+
         clearInterval(timer);
-        reject(new Error("Firebase authentication timeout."));
+
+        reject(
+          new Error(
+            "Firebase authentication timeout."
+          )
+        );
+
       }
+
     }, 100);
+
   });
+
 }
 
 
-/* GET ORIGINAL MESSAGE DATE */
-
-function getMessageDate(msg) {
-  try {
-    if (msg.createdAt && typeof msg.createdAt.toDate === "function") {
-      return msg.createdAt.toDate();
-    }
-
-    if (msg.createdAt && typeof msg.createdAt.seconds === "number") {
-      return new Date(msg.createdAt.seconds * 1000);
-    }
-
-    if (msg.createdAt instanceof Date) {
-      return msg.createdAt;
-    }
-
-    if (msg.createdAt) {
-      const parsed = new Date(msg.createdAt);
-      if (!Number.isNaN(parsed.getTime())) return parsed;
-    }
-  } catch (e) {
-    console.warn("Could not parse message date", e);
-  }
-
-  return null;
-}
-
-
-/* PAKISTAN DATE AND TIME */
-
-function formatPakistanDate(date) {
-  return new Intl.DateTimeFormat("en-PK", {
-    timeZone: TIME_ZONE,
-    weekday: "long",
-    day: "2-digit",
-    month: "long",
-    year: "numeric"
-  }).format(date);
-}
-
-function formatPakistanTime(date, fallback) {
-  if (!date) return fallback || "Time unavailable";
-
-  return new Intl.DateTimeFormat("en-PK", {
-    timeZone: TIME_ZONE,
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true
-  }).format(date);
-}
-
-
-/* SEND MESSAGE */
+/* =========================================
+   SEND MESSAGE
+========================================= */
 
 window.sendMessage = async function() {
-  const input = document.getElementById("messageInput");
-  const sendButton = document.getElementById("sendButton");
 
-  const text = input.value.trim();
+  const input =
+    document.getElementById(
+      "messageInput"
+    );
 
-  if (!text) return;
+  const sendButton =
+    document.getElementById(
+      "sendButton"
+    );
+
+  const text =
+    input.value.trim();
+
+
+  if (text === "") {
+
+    return;
+
+  }
+
 
   try {
-    const user = await waitForFirebase();
+
+    const user =
+      await waitForFirebase();
+
 
     sendButton.disabled = true;
 
-    const newMessage = {
-      text: text,
-      senderId: user.uid,
-      deviceId: deviceId,
 
-      time: new Intl.DateTimeFormat("en-PK", {
-        timeZone: TIME_ZONE,
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true
-      }).format(new Date()),
+    await addDoc(
+      messagesRef,
+      {
 
-      createdAt: serverTimestamp()
-    };
+        text: text,
 
-    /*
-      Reply information is stored inside the NEW message.
-      Old messages are never edited.
-    */
+        senderId: user.uid,
 
-    if (replyTarget) {
-      newMessage.replyTo = {
-        messageId: replyTarget.id,
-        text: replyTarget.text,
-        senderId: replyTarget.senderId || ""
-      };
-    }
+        deviceId: deviceId,
 
-    await addDoc(messagesRef, newMessage);
+        time: new Date()
+          .toLocaleTimeString(
+            [],
+            {
+              hour: "2-digit",
+              minute: "2-digit"
+            }
+          ),
+
+        createdAt:
+          serverTimestamp()
+
+      }
+    );
+
 
     input.value = "";
+
     input.focus();
 
-    cancelReply();
 
   } catch (error) {
-    console.error("Message send error:", error);
+
+    console.error(
+      "Message send error:",
+      error
+    );
 
     alert(
-      "Message send nahi hua. Firebase connection ya existing Firestore rules ne request reject ki ho sakti hai. Purani history change nahi ki gayi."
+      "Message send nahi hua. " +
+      "Firebase Firestore Rules check karo."
     );
 
   } finally {
+
     sendButton.disabled = false;
-  }
-};
 
-
-/* START REPLY */
-
-window.startReply = function(messageId) {
-  const item = loadedMessages.find(m => m.id === messageId);
-
-  if (!item) return;
-
-  replyTarget = {
-    id: item.id,
-    text: item.data.text || "",
-    senderId: item.data.senderId || ""
-  };
-
-  const preview = document.getElementById("replyComposer");
-
-  document.getElementById("replyComposerText").textContent =
-    replyTarget.text || "(empty message)";
-
-  preview.style.display = "flex";
-
-  document.getElementById("messageInput").focus();
-};
-
-
-/* CANCEL REPLY */
-
-window.cancelReply = function() {
-  replyTarget = null;
-
-  const preview = document.getElementById("replyComposer");
-
-  if (preview) preview.style.display = "none";
-};
-
-
-/* JUMP TO ORIGINAL MESSAGE */
-
-window.jumpToMessage = function(messageId) {
-  const target = document.getElementById("message-" + messageId);
-
-  if (!target) return;
-
-  target.scrollIntoView({
-    behavior: "smooth",
-    block: "center"
-  });
-
-  target.classList.add("highlightMessage");
-
-  setTimeout(() => {
-    target.classList.remove("highlightMessage");
-  }, 1600);
-};
-
-
-/* CREATE MESSAGE ELEMENT */
-
-function makeMessageElement(item) {
-  const msg = item.data;
-
-  const div = document.createElement("div");
-
-  div.id = "message-" + item.id;
-
-  div.className =
-    "message " +
-    (currentUser && msg.senderId === currentUser.uid
-      ? "sent"
-      : "received");
-
-
-  /* REPLY PREVIEW */
-
-  if (msg.replyTo && msg.replyTo.messageId) {
-    const quote = document.createElement("button");
-
-    quote.type = "button";
-    quote.className = "replyQuote";
-
-    quote.addEventListener("click", () => {
-      window.jumpToMessage(msg.replyTo.messageId);
-    });
-
-    const who = document.createElement("strong");
-
-    who.textContent =
-      msg.replyTo.senderId &&
-      currentUser &&
-      msg.replyTo.senderId === currentUser.uid
-        ? "You replied to"
-        : "Replying to";
-
-    const quotedText = document.createElement("span");
-
-    quotedText.textContent =
-      msg.replyTo.text || "Original message";
-
-    quote.append(who, quotedText);
-
-    div.appendChild(quote);
   }
 
-
-  /* MESSAGE TEXT */
-
-  const text = document.createElement("span");
-
-  text.className = "messageText";
-  text.textContent = msg.text || "";
-
-  div.appendChild(text);
+};
 
 
-  /* MESSAGE TIME */
+/* =========================================
+   LOAD MESSAGES - REAL TIME
+========================================= */
 
-  const date = getMessageDate(msg);
+let unsubscribeMessages = null;
 
-  const time = document.createElement("span");
+function loadMessages() {
 
-  time.className = "time";
-
-  time.textContent = formatPakistanTime(date, msg.time || "");
-
-  div.appendChild(time);
-
-
-  /* REPLY BUTTON */
-
-  const replyButton = document.createElement("button");
-
-  replyButton.type = "button";
-  replyButton.className = "replyBtn";
-  replyButton.textContent = "↩ Reply";
-
-  replyButton.addEventListener("click", () => {
-    window.startReply(item.id);
-  });
-
-  div.appendChild(replyButton);
-
-  return {
-    element: div,
-    date: date
-  };
-}
-
-
-/* RENDER ALL MESSAGES */
-
-function renderMessages() {
-  const chatArea = document.getElementById("chatArea");
-
-  chatArea.innerHTML = "";
-
-  const welcome = document.createElement("div");
-
-  welcome.className = "welcome";
-
-  welcome.innerHTML =
-    "✨ Your private space ✨<br>Messages are saved online.";
-
-  chatArea.appendChild(welcome);
-
-
-  if (!loadedMessages.length) {
-    const empty = document.createElement("div");
-
-    empty.className = "empty";
-
-    empty.innerHTML =
-      "No messages yet...<br>Start your little conversation 💌";
-
-    chatArea.appendChild(empty);
-
-    return;
-  }
-
-
-  let lastDateKey = "";
-
-  loadedMessages.forEach(item => {
-    const rendered = makeMessageElement(item);
-
-    if (rendered.date) {
-      const dateKey = new Intl.DateTimeFormat("en-CA", {
-        timeZone: TIME_ZONE,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit"
-      }).format(rendered.date);
-
-      if (dateKey !== lastDateKey) {
-        const divider = document.createElement("div");
-
-        divider.className = "dateDivider";
-        divider.textContent = formatPakistanDate(rendered.date);
-
-        chatArea.appendChild(divider);
-
-        lastDateKey = dateKey;
-      }
-    }
-
-    chatArea.appendChild(rendered.element);
-  });
-
-  chatArea.scrollTop = chatArea.scrollHeight;
-}
-
-
-
-/* LOAD MESSAGES FROM ORIGINAL COLLECTION */
-
-async function loadMessages() {
-  const chatArea = document.getElementById("chatArea");
-
-  try {
-    // Wait for Firebase anonymous login
-    await waitForFirebase();
-
-    if (unsubscribeMessages) {
-      unsubscribeMessages();
-      unsubscribeMessages = null;
-    }
-
-    // Read from the SAME old collection
-    const q = query(
-      messagesRef,
-      orderBy("createdAt", "asc")
+  const chatArea =
+    document.getElementById(
+      "chatArea"
     );
 
-    unsubscribeMessages = onSnapshot(
-      q,
-      (snapshot) => {
-        loadedMessages = snapshot.docs.map(docSnap => ({
-          id: docSnap.id,
-          data: docSnap.data()
-        }));
 
-        renderMessages();
-      },
-      (error) => {
-        console.error("Firestore listener error:", error);
+  /*
+     If this function is accidentally called
+     more than once, remove the previous listener.
+
+     This prevents duplicate listeners.
+  */
+
+  if (unsubscribeMessages) {
+
+    unsubscribeMessages();
+
+    unsubscribeMessages = null;
+
+  }
+
+
+  const q = query(
+    messagesRef,
+    orderBy("createdAt", "asc")
+  );
+
+
+  unsubscribeMessages =
+    onSnapshot(
+
+      q,
+
+      (snapshot) => {
 
         chatArea.innerHTML = "";
 
-        const errorBox = document.createElement("div");
-        errorBox.className = "empty";
-        errorBox.textContent =
-          "History load error: " +
-          (error.code || "unknown") +
-          " — " +
-          (error.message || "Please try again.");
 
-        chatArea.appendChild(errorBox);
+        const welcome =
+          document.createElement("div");
+
+        welcome.className = "welcome";
+
+        welcome.innerHTML =
+          "✨ Your private space ✨<br>" +
+          "Messages are saved online.";
+
+        chatArea.appendChild(
+          welcome
+        );
+
+
+        if (snapshot.empty) {
+
+          const empty =
+            document.createElement("div");
+
+          empty.className = "empty";
+
+          empty.innerHTML =
+            "No messages yet...<br>" +
+            "Start your little conversation 💌";
+
+          chatArea.appendChild(
+            empty
+          );
+
+          return;
+
+        }
+
+
+        snapshot.forEach((doc) => {
+
+          const msg = doc.data();
+
+          const div =
+            document.createElement(
+              "div"
+            );
+
+
+          /*
+             IMPORTANT FIX:
+
+             Message ownership is determined
+             from Firebase's unique user ID.
+
+             One person's device does NOT
+             replace or disconnect another person's
+             session.
+          */
+
+          if (
+            currentUser &&
+            msg.senderId === currentUser.uid
+          ) {
+
+            div.className =
+              "message sent";
+
+          } else {
+
+            div.className =
+              "message received";
+
+          }
+
+
+          const text =
+            document.createElement(
+              "span"
+            );
+
+          text.className =
+            "messageText";
+
+          /*
+             textContent prevents HTML injection.
+          */
+
+          text.textContent =
+            msg.text || "";
+
+
+          const time =
+            document.createElement(
+              "span"
+            );
+
+          time.className =
+            "time";
+
+          time.textContent =
+            msg.time || "";
+
+
+          div.appendChild(text);
+
+          div.appendChild(time);
+
+          chatArea.appendChild(div);
+
+        });
+
+
+        chatArea.scrollTop =
+          chatArea.scrollHeight;
+
+      },
+
+      (error) => {
+
+        console.error(
+          "Firestore listener error:",
+          error
+        );
+
+
+        chatArea.innerHTML = "";
+
+        const errorBox =
+          document.createElement(
+            "div"
+          );
+
+        errorBox.className =
+          "empty";
+
+        errorBox.innerHTML =
+          "Messages load nahi ho rahe. 💔<br>" +
+          "Firebase Firestore Rules check karo.";
+
+        chatArea.appendChild(
+          errorBox
+        );
+
       }
+
     );
 
-  } catch (error) {
-    console.error("Firebase history loading error:", error);
-
-    chatArea.innerHTML = "";
-
-    const errorBox = document.createElement("div");
-    errorBox.className = "empty";
-    errorBox.textContent =
-      "Firebase login error: " +
-      (error.code || error.message || "Unknown error");
-
-    chatArea.appendChild(errorBox);
-  }
 }
 
 
-/* DOWNLOAD CHAT BACKUP */
+/* =========================================
+   ENTER TO SEND
+========================================= */
 
-window.downloadChatBackup = function() {
+document
+  .getElementById("messageInput")
+  .addEventListener(
+    "keydown",
+    function(e) {
 
-  if (!loadedMessages.length) {
-    alert(
-      "Abhi koi message load nahi hua. Firebase se history load hone ke baad backup download karein."
-    );
+      if (e.key === "Enter") {
 
-    return;
-  }
+        e.preventDefault();
 
-  const backup = {
-    backupType: "MR PAGAL chat history",
-    exportedAt: new Date().toISOString(),
-    timeZone: TIME_ZONE,
-    projectId: "buzy-f42e5",
-    collection: "mrPagalMessages",
+        sendMessage();
 
-    note: "Read-only export. This file does not modify Firebase.",
-
-    messages: loadedMessages.map(item => {
-      const data = { ...item.data };
-
-      const date = getMessageDate(data);
-
-      if (date) {
-        data.createdAt = date.toISOString();
       }
 
-      return {
-        id: item.id,
-        ...data
-      };
-    })
-  };
-
-  const blob = new Blob(
-    [JSON.stringify(backup, null, 2)],
-    { type: "application/json;charset=utf-8" }
+    }
   );
 
-  const url = URL.createObjectURL(blob);
 
-  const a = document.createElement("a");
-
-  a.href = url;
-
-  a.download =
-    "MR-PAGAL-chat-backup-" +
-    new Date().toISOString().slice(0, 10) +
-    ".json";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  URL.revokeObjectURL(url);
-};
-
-
-/* ENTER TO SEND */
-
-document.getElementById("messageInput").addEventListener(
-  "keydown",
-  function(e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      window.sendMessage();
-    }
-  }
-);
-
-
-/* FLASHING STARS */
+/* =========================================
+   FLASHING STARS
+========================================= */
 
 for (let i = 0; i < 35; i++) {
-  const star = document.createElement("div");
+
+  const star =
+    document.createElement("div");
 
   star.className = "star";
-  star.textContent = "✦";
 
-  star.style.left = Math.random() * 100 + "%";
-  star.style.top = Math.random() * 100 + "%";
+  star.innerHTML = "✦";
+
+  star.style.left =
+    Math.random() * 100 + "%";
+
+  star.style.top =
+    Math.random() * 100 + "%";
 
   star.style.fontSize =
     (Math.random() * 10 + 5) + "px";
@@ -1264,19 +1292,36 @@ for (let i = 0; i < 35; i++) {
   star.style.animationDelay =
     Math.random() * 3 + "s";
 
-  document.getElementById("stars").appendChild(star);
+  document
+    .getElementById("stars")
+    .appendChild(star);
+
 }
 
 
-/* CLEANUP */
+/* =========================================
+   CLEANUP
+========================================= */
 
-window.addEventListener("beforeunload", () => {
-  if (unsubscribeMessages) {
-    unsubscribeMessages();
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    /*
+       We intentionally DO NOT change,
+       delete, or lock the other person's
+       Firebase session here.
+    */
+
+    if (unsubscribeMessages) {
+
+      unsubscribeMessages();
+
+    }
+
   }
-});
+);
 
 </script>
 
 </body>
-</html>
