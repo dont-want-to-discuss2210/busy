@@ -649,13 +649,16 @@ let loadedMessages = [];
 let replyTarget = null;
 
 
+
 /* AUTH STATE */
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
     currentUser = user;
     firebaseReady = true;
-    console.log("Firebase user connected:", user.uid);
+    console.log("Firebase connected:", user.uid);
+  } else {
+    console.log("Firebase authentication pending...");
   }
 });
 
@@ -664,18 +667,38 @@ onAuthStateChanged(auth, (user) => {
 
 async function initializeAuthentication() {
   try {
-    await signInAnonymously(auth);
-    console.log("Firebase anonymous authentication successful.");
+    // Already logged in?
+    if (auth.currentUser) {
+      currentUser = auth.currentUser;
+      firebaseReady = true;
+      return;
+    }
+
+    // Sign in anonymously
+    const result = await signInAnonymously(auth);
+
+    // Set user immediately
+    currentUser = result.user;
+    firebaseReady = true;
+
+    console.log("Anonymous login successful:", currentUser.uid);
+
   } catch (error) {
-    console.error("Firebase authentication error:", error);
+    firebaseReady = false;
+    currentUser = null;
+
+    console.error("Firebase AUTH ERROR:", error.code, error.message);
 
     alert(
-      "Firebase connection nahi ho saka. Agar Firebase filhaal unavailable hai to chat load/send nahi hogi; aapki online history delete nahi hoti."
+      "Firebase Login Failed!\n" +
+      "Error: " + error.code + "\n" +
+      error.message
     );
   }
 }
 
 initializeAuthentication();
+
 
 
 /* PASSCODE SYSTEM */
