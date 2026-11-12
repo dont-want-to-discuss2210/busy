@@ -4,670 +4,191 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MR PAGAL 💗</title>
-
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
-
 *{box-sizing:border-box}
+body{margin:0;font-family:Poppins,sans-serif;background:#120b20;color:white;min-height:100vh;overflow:hidden}
+body:before{content:"";position:fixed;width:500px;height:500px;background:#ff4fa3;filter:blur(150px);opacity:.18;top:-150px;left:-150px;pointer-events:none}
+body:after{content:"";position:fixed;width:400px;height:400px;background:#8b5cf6;filter:blur(150px);opacity:.15;bottom:-150px;right:-100px;pointer-events:none}
+.stars{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;color:#ffd6f0;animation:twinkle 2s infinite alternate;opacity:.5}
+@keyframes twinkle{from{opacity:.15;transform:scale(.8)}to{opacity:.8;transform:scale(1.2)}}
 
-body{
-  margin:0;
-  font-family:Poppins,sans-serif;
-  background:#120b20;
-  color:white;
-  min-height:100vh;
-  overflow:hidden;
-}
+/* LOCK SCREEN */
+#lockScreen{position:fixed;inset:0;z-index:10;display:flex;justify-content:center;align-items:center;padding:20px;background:rgba(10,5,20,.92);backdrop-filter:blur(15px)}
+.lockBox{width:100%;max-width:400px;text-align:center;padding:35px 25px;border-radius:25px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);box-shadow:0 0 50px rgba(255,79,163,.12)}
+.lockIcon{font-size:50px;margin-bottom:10px;animation:pulse 2s infinite}
+@keyframes pulse{50%{transform:scale(1.08)}}
+.lockBox h1{margin:5px 0;font-size:25px}
+.lockBox p{color:#cfc5d9;font-size:13px}
+.step{display:none}
+.step.active{display:block}
+.stepTitle{color:#ff9bc9;font-size:13px;margin:25px 0 15px}
+input{width:100%;padding:15px;border-radius:12px;border:1px solid #493653;background:#1c112b;color:white;text-align:center;font-size:18px;letter-spacing:5px;outline:none}
+input:focus{border-color:#ff5fa8;box-shadow:0 0 15px rgba(255,95,168,.2)}
+button{border:none;cursor:pointer;font-family:inherit}
+.unlockBtn{width:100%;margin-top:15px;padding:14px;border-radius:12px;background:linear-gradient(135deg,#ff4f9a,#a855f7);color:white;font-weight:600;font-size:15px;box-shadow:0 5px 20px rgba(255,79,154,.2)}
+.error{color:#ff8fb8;font-size:12px;margin-top:12px;min-height:18px}
+.progress{display:flex;gap:6px;margin:20px 0}
+.progress span{height:4px;flex:1;background:#35233f;border-radius:10px}
+.progress span.active{background:#ff5fa8}
 
-body:before{
-  content:"";
-  position:fixed;
-  width:500px;
-  height:500px;
-  background:#ff4fa3;
-  filter:blur(150px);
-  opacity:.18;
-  top:-150px;
-  left:-150px;
-  pointer-events:none;
-}
+/* VERIFIED POPUP */
+#verifiedPopup{display:none;position:fixed;inset:0;z-index:20;justify-content:center;align-items:center;background:rgba(10,5,20,.85);backdrop-filter:blur(10px)}
+.popup{text-align:center;padding:35px 30px;border-radius:25px;background:linear-gradient(145deg,#351a43,#1d102b);border:1px solid #ff75b8;box-shadow:0 0 50px rgba(255,79,163,.25);animation:popupIn .5s ease}
+@keyframes popupIn{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.popup .heart{font-size:55px}
+.popup h2{color:#ff9dca;font-size:22px;margin:10px 0}
+.popup p{color:#d8c9df;font-size:13px}
 
-body:after{
-  content:"";
-  position:fixed;
-  width:400px;
-  height:400px;
-  background:#8b5cf6;
-  filter:blur(150px);
-  opacity:.15;
-  bottom:-150px;
-  right:-100px;
-  pointer-events:none;
-}
+/* CHAT APP */
+#chatApp{display:none;height:100vh;max-width:700px;margin:auto;flex-direction:column;position:relative;z-index:1}
+.chatHeader{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;background:rgba(20,10,35,.75);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(15px)}
+.profile{display:flex;align-items:center;gap:12px}
+.avatar{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#ff4f9a,#8b5cf6);display:flex;justify-content:center;align-items:center;font-size:21px;box-shadow:0 0 20px rgba(255,79,163,.2)}
+.profile h3{margin:0;font-size:15px}
+.profile small{color:#9edfbf;font-size:11px}
+.lockBtn{background:#2a1839;color:#e8cce3;padding:9px 12px;border-radius:10px;font-size:12px}
+.chatArea{flex:1;overflow-y:auto;padding:25px 18px;display:flex;flex-direction:column;gap:12px}
+.welcome{text-align:center;color:#bca9c9;font-size:12px;margin:10px 0 20px}
 
-.stars{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  overflow:hidden;
-}
+/* DATE SEPARATOR */
+.dateSep{align-self:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);color:#d9c6e6;font-size:11px;padding:4px 14px;border-radius:20px;margin:8px 0 2px}
 
-.star{
-  position:absolute;
-  color:#ffd6f0;
-  animation:twinkle 2s infinite alternate;
-  opacity:.5;
-}
+/* MESSAGES */
+.message{position:relative;max-width:78%;padding:11px 15px;border-radius:17px;font-size:13px;line-height:1.5;word-wrap:break-word;animation:messageIn .25s ease;transition:transform .15s,background .3s;touch-action:pan-y}
+@keyframes messageIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.message.sent{align-self:flex-end;background:linear-gradient(135deg,#ff4f9a,#b04cf0);border-bottom-right-radius:5px}
+.message.received{align-self:flex-start;background:#251634;border:1px solid #3c2850;border-bottom-left-radius:5px}
+.message.flash{box-shadow:0 0 0 2px #ffd6f0,0 0 25px rgba(255,214,240,.5)}
+.messageText{display:block}
+.time{display:block;font-size:9px;opacity:.6;margin-top:4px;text-align:right}
 
-@keyframes twinkle{
-  from{
-    opacity:.15;
-    transform:scale(.8);
-  }
-  to{
-    opacity:.8;
-    transform:scale(1.2);
-  }
-}
+/* QUOTED REPLY */
+.quote{display:block;background:rgba(0,0,0,.22);border-left:3px solid #ffd6f0;border-radius:8px;padding:6px 10px;margin-bottom:7px;cursor:pointer}
+.message.received .quote{border-left-color:#ff5fa8}
+.quote b{display:block;font-size:11px;color:#ffd6f0}
+.message.received .quote b{color:#ff9bc9}
+.quote span{display:block;font-size:12px;opacity:.8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
 
-/* ================================
-   LOCK SCREEN
-================================ */
+/* REPLY BUTTON (desktop hover) */
+.replyBtn{position:absolute;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;background:#2a1839;color:#ffd6f0;font-size:13px;opacity:0;transition:opacity .15s;padding:0}
+.message.sent .replyBtn{left:-34px}
+.message.received .replyBtn{right:-34px}
+.message:hover .replyBtn{opacity:.9}
 
-#lockScreen{
-  position:fixed;
-  inset:0;
-  z-index:10;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:20px;
-  background:rgba(10,5,20,.92);
-  backdrop-filter:blur(15px);
-}
+/* REPLY PREVIEW BAR */
+#replyBar{display:none;align-items:center;gap:10px;padding:8px 15px;background:rgba(20,10,35,.9);border-top:1px solid rgba(255,255,255,.08)}
+#replyBar .quote{flex:1;margin:0;min-width:0}
+#cancelReply{background:#2a1839;color:#e8cce3;width:28px;height:28px;border-radius:50%;font-size:14px;padding:0}
 
-.lockBox{
-  width:100%;
-  max-width:400px;
-  text-align:center;
-  padding:35px 25px;
-  border-radius:25px;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.15);
-  box-shadow:0 0 50px rgba(255,79,163,.12);
-}
-
-.lockIcon{
-  font-size:50px;
-  margin-bottom:10px;
-  animation:pulse 2s infinite;
-}
-
-@keyframes pulse{
-  50%{
-    transform:scale(1.08);
-  }
-}
-
-.lockBox h1{
-  margin:5px 0;
-  font-size:25px;
-}
-
-.lockBox p{
-  color:#cfc5d9;
-  font-size:13px;
-}
-
-.step{
-  display:none;
-}
-
-.step.active{
-  display:block;
-}
-
-.stepTitle{
-  color:#ff9bc9;
-  font-size:13px;
-  margin:25px 0 15px;
-}
-
-input{
-  width:100%;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #493653;
-  background:#1c112b;
-  color:white;
-  text-align:center;
-  font-size:18px;
-  letter-spacing:5px;
-  outline:none;
-}
-
-input:focus{
-  border-color:#ff5fa8;
-  box-shadow:0 0 15px rgba(255,95,168,.2);
-}
-
-button{
-  border:none;
-  cursor:pointer;
-  font-family:inherit;
-}
-
-.unlockBtn{
-  width:100%;
-  margin-top:15px;
-  padding:14px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#ff4f9a,#a855f7);
-  color:white;
-  font-weight:600;
-  font-size:15px;
-  box-shadow:0 5px 20px rgba(255,79,154,.2);
-}
-
-.error{
-  color:#ff8fb8;
-  font-size:12px;
-  margin-top:12px;
-  min-height:18px;
-}
-
-.progress{
-  display:flex;
-  gap:6px;
-  margin:20px 0;
-}
-
-.progress span{
-  height:4px;
-  flex:1;
-  background:#35233f;
-  border-radius:10px;
-}
-
-.progress span.active{
-  background:#ff5fa8;
-}
-
-/* ================================
-   VERIFIED POPUP
-================================ */
-
-#verifiedPopup{
-  display:none;
-  position:fixed;
-  inset:0;
-  z-index:20;
-  justify-content:center;
-  align-items:center;
-  background:rgba(10,5,20,.85);
-  backdrop-filter:blur(10px);
-}
-
-.popup{
-  text-align:center;
-  padding:35px 30px;
-  border-radius:25px;
-  background:linear-gradient(145deg,#351a43,#1d102b);
-  border:1px solid #ff75b8;
-  box-shadow:0 0 50px rgba(255,79,163,.25);
-  animation:popupIn .5s ease;
-}
-
-@keyframes popupIn{
-  from{
-    transform:scale(.7);
-    opacity:0;
-  }
-  to{
-    transform:scale(1);
-    opacity:1;
-  }
-}
-
-.popup .heart{
-  font-size:55px;
-}
-
-.popup h2{
-  color:#ff9dca;
-  font-size:22px;
-  margin:10px 0;
-}
-
-.popup p{
-  color:#d8c9df;
-  font-size:13px;
-}
-
-/* ================================
-   CHAT APP
-================================ */
-
-#chatApp{
-  display:none;
-  height:100vh;
-  max-width:700px;
-  margin:auto;
-  flex-direction:column;
-  position:relative;
-  z-index:1;
-}
-
-.chatHeader{
-  padding:18px 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:rgba(20,10,35,.75);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(15px);
-}
-
-.profile{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#ff4f9a,#8b5cf6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:21px;
-  box-shadow:0 0 20px rgba(255,79,163,.2);
-}
-
-.profile h3{
-  margin:0;
-  font-size:15px;
-}
-
-.profile small{
-  color:#9edfbf;
-  font-size:11px;
-}
-
-.lockBtn{
-  background:#2a1839;
-  color:#e8cce3;
-  padding:9px 12px;
-  border-radius:10px;
-  font-size:12px;
-}
-
-.chatArea{
-  flex:1;
-  overflow-y:auto;
-  padding:25px 18px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-.welcome{
-  text-align:center;
-  color:#bca9c9;
-  font-size:12px;
-  margin:10px 0 20px;
-}
-
-.message{
-  max-width:78%;
-  padding:11px 15px;
-  border-radius:17px;
-  font-size:13px;
-  line-height:1.5;
-  word-wrap:break-word;
-  animation:messageIn .25s ease;
-}
-
-@keyframes messageIn{
-  from{
-    opacity:0;
-    transform:translateY(8px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
-}
-
-.message.sent{
-  align-self:flex-end;
-  background:linear-gradient(135deg,#ff4f9a,#b04cf0);
-  border-bottom-right-radius:5px;
-}
-
-.message.received{
-  align-self:flex-start;
-  background:#251634;
-  border:1px solid #3c2850;
-  border-bottom-left-radius:5px;
-}
-
-.messageText{
-  display:block;
-}
-
-.time{
-  display:block;
-  font-size:9px;
-  opacity:.6;
-  margin-top:4px;
-  text-align:right;
-}
-
-.chatInput{
-  padding:15px;
-  background:rgba(20,10,35,.8);
-  border-top:1px solid rgba(255,255,255,.08);
-  display:flex;
-  gap:10px;
-}
-
-.chatInput input{
-  flex:1;
-  text-align:left;
-  letter-spacing:0;
-  font-size:13px;
-  padding:13px;
-}
-
-.sendBtn{
-  width:50px;
-  border-radius:12px;
-  background:linear-gradient(135deg,#ff4f9a,#a855f7);
-  color:white;
-  font-size:20px;
-}
-
-.sendBtn:disabled{
-  opacity:.5;
-  cursor:not-allowed;
-}
-
-.empty{
-  text-align:center;
-  color:#a998b5;
-  font-size:12px;
-  margin:auto;
-}
-
-.status{
-  font-size:10px;
-  color:#9edfbf;
-  margin-top:2px;
-}
-
-.loading{
-  text-align:center;
-  color:#bca9c9;
-  font-size:12px;
-  margin:auto;
-}
-
+.chatInput{padding:15px;background:rgba(20,10,35,.8);border-top:1px solid rgba(255,255,255,.08);display:flex;gap:10px}
+.chatInput input{flex:1;text-align:left;letter-spacing:0;font-size:13px;padding:13px}
+.sendBtn{width:50px;border-radius:12px;background:linear-gradient(135deg,#ff4f9a,#a855f7);color:white;font-size:20px}
+.sendBtn:disabled{opacity:.5;cursor:not-allowed}
+.empty{text-align:center;color:#a998b5;font-size:12px;margin:auto}
+.loading{text-align:center;color:#bca9c9;font-size:12px;margin:auto}
 @media(max-width:500px){
-  .chatHeader{
-    padding:15px;
-  }
-
-  .chatArea{
-    padding:20px 12px;
-  }
-
-  .message{
-    max-width:85%;
-  }
-
-  .lockBox{
-    padding:30px 20px;
-  }
+  .chatHeader{padding:15px}
+  .chatArea{padding:20px 12px}
+  .message{max-width:85%}
+  .lockBox{padding:30px 20px}
 }
 </style>
 </head>
-
 <body>
 
 <div class="stars" id="stars"></div>
 
-<!-- ================================
-     LOCK SCREEN
-================================ -->
-
+<!-- LOCK SCREEN -->
 <div id="lockScreen">
-
   <div class="lockBox">
-
     <div class="lockIcon">🔐</div>
-
     <h1>Private Space 💗</h1>
-
     <p>Only two special people are allowed here.</p>
-
-    <div class="progress">
-      <span class="active"></span>
-      <span></span>
-      <span></span>
-    </div>
+    <div class="progress"><span class="active"></span><span></span><span></span></div>
 
     <div class="step active" id="step1">
-
-      <div class="stepTitle">
-        🔑 Enter the first passcode
-      </div>
-
-      <input
-        type="password"
-        id="code1"
-        placeholder="••••••"
-        maxlength="6"
-        autocomplete="off"
-      >
-
-      <button
-        class="unlockBtn"
-        onclick="checkStep(1)"
-      >
-        Continue 💗
-      </button>
-
+      <div class="stepTitle">🔑 Enter the first passcode</div>
+      <input type="password" id="code1" placeholder="••••••" maxlength="6" autocomplete="off">
+      <button class="unlockBtn" onclick="checkStep(1)">Continue 💗</button>
       <div class="error" id="error1"></div>
-
     </div>
 
     <div class="step" id="step2">
-
-      <div class="stepTitle">
-        🎂 When is her birthday?
-      </div>
-
-      <input
-        type="password"
-        id="code2"
-        placeholder="••••••"
-        maxlength="6"
-        autocomplete="off"
-      >
-
-      <button
-        class="unlockBtn"
-        onclick="checkStep(2)"
-      >
-        Continue 💗
-      </button>
-
+      <div class="stepTitle">🎂 When is her birthday?</div>
+      <input type="password" id="code2" placeholder="••••••" maxlength="6" autocomplete="off">
+      <button class="unlockBtn" onclick="checkStep(2)">Continue 💗</button>
       <div class="error" id="error2"></div>
-
     </div>
 
     <div class="step" id="step3">
-
-      <div class="stepTitle">
-        💍 On which date did you collaborate in October?
-      </div>
-
-      <input
-        type="password"
-        id="code3"
-        placeholder="••••••"
-        maxlength="6"
-        autocomplete="off"
-      >
-
-      <button
-        class="unlockBtn"
-        onclick="checkStep(3)"
-      >
-        Unlock Our Space 💗
-      </button>
-
+      <div class="stepTitle">💍 On which date did you collaborate in October?</div>
+      <input type="password" id="code3" placeholder="••••••" maxlength="6" autocomplete="off">
+      <button class="unlockBtn" onclick="checkStep(3)">Unlock Our Space 💗</button>
       <div class="error" id="error3"></div>
-
     </div>
-
   </div>
-
 </div>
 
-<!-- ================================
-     VERIFIED POPUP
-================================ -->
-
+<!-- VERIFIED POPUP -->
 <div id="verifiedPopup">
-
   <div class="popup">
-
     <div class="heart">💗</div>
-
     <h2>MR PAGAL IS VERIFIED ✨</h2>
-
     <p>Welcome to your little private world.</p>
-
   </div>
-
 </div>
 
-<!-- ================================
-     CHAT APP
-================================ -->
-
+<!-- CHAT APP -->
 <div id="chatApp">
-
   <div class="chatHeader">
-
     <div class="profile">
-
-      <div class="avatar">
-        💗
-      </div>
-
+      <div class="avatar">💗</div>
       <div>
-
-        <h3>
-          MR PAGAL ✨
-        </h3>
-
-        <small>
-          ● Private & Verified
-        </small>
-
+        <h3>MR PAGAL ✨</h3>
+        <small>● Private & Verified</small>
       </div>
-
     </div>
-
-    <button
-      class="lockBtn"
-      onclick="lockAgain()"
-    >
-      🔒 Lock
-    </button>
-
+    <button class="lockBtn" onclick="lockAgain()">🔒 Lock</button>
   </div>
 
   <div class="chatArea" id="chatArea">
+    <div class="welcome">✨ Your private space ✨<br>Messages are saved online.</div>
+    <div class="loading">Connecting to your private chat...</div>
+  </div>
 
-    <div class="welcome">
-      ✨ Your private space ✨
-      <br>
-      Messages are saved online.
-    </div>
-
-    <div class="loading">
-      Connecting to your private chat...
-    </div>
-
+  <!-- reply preview -->
+  <div id="replyBar">
+    <div class="quote"><b id="replyName"></b><span id="replyText"></span></div>
+    <button id="cancelReply" onclick="cancelReply()">✕</button>
   </div>
 
   <div class="chatInput">
-
-    <input
-      type="text"
-      id="messageInput"
-      placeholder="Write something sweet... 💌"
-      autocomplete="off"
-    >
-
-    <button
-      class="sendBtn"
-      id="sendButton"
-      onclick="sendMessage()"
-    >
-      ➤
-    </button>
-
+    <input type="text" id="messageInput" placeholder="Write something sweet... 💌" autocomplete="off">
+    <button class="sendBtn" id="sendButton" onclick="sendMessage()">➤</button>
   </div>
-
 </div>
 
 <script type="module">
 
 /* =========================================
-   FIREBASE IMPORTS
+   FIREBASE IMPORTS (UNCHANGED)
 ========================================= */
-
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-
-import {
-  getAuth,
-  signInAnonymously,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
-
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 /* =========================================
-   PASSCODES
+   PASSCODES (UNCHANGED)
 ========================================= */
-
 const PASSCODE_1 = "220208";
 const PASSCODE_2 = "100407";
 const PASSCODE_3 = "071024";
 
-
 /* =========================================
-   FIREBASE CONFIG
+   FIREBASE CONFIG (UNCHANGED)
 ========================================= */
-
 const firebaseConfig = {
   apiKey: "AIzaSyCAEP1g8uJ7i4Cv0JiXHqMqdTF1frD59c4",
   authDomain: "buzy-f42e5.firebaseapp.com",
@@ -678,650 +199,334 @@ const firebaseConfig = {
   measurementId: "G-45DM8GH4NK"
 };
 
-
-/* =========================================
-   INITIALIZE FIREBASE
-========================================= */
-
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
 
+/* SAME OLD COLLECTION - history stays */
+const messagesRef = collection(db, "mrPagalMessages");
 
 /* =========================================
-   FIREBASE CHAT COLLECTION
-   IMPORTANT: Keep using the OLD collection
-   so all existing messages remain visible.
+   LOCAL DEVICE ID (UNCHANGED)
 ========================================= */
-
-const messagesRef = collection(
-  db,
-  "mrPagalMessages"
-);
-
-
-/* =========================================
-   LOCAL DEVICE ID
-========================================= */
-
-/*
-   This ID identifies this browser/device.
-
-   It is NOT used to disconnect anyone.
-   Each device gets its own ID.
-*/
-
 let deviceId = localStorage.getItem("mrPagalDeviceId");
-
 if (!deviceId) {
-
-  deviceId =
-    "device_" +
-    Date.now() +
-    "_" +
-    Math.random()
-      .toString(36)
-      .substring(2, 10);
-
-  localStorage.setItem(
-    "mrPagalDeviceId",
-    deviceId
-  );
+  deviceId = "device_" + Date.now() + "_" + Math.random().toString(36).substring(2, 10);
+  localStorage.setItem("mrPagalDeviceId", deviceId);
 }
 
-
 /* =========================================
-   FIREBASE AUTH STATE
+   FIREBASE AUTH (UNCHANGED)
 ========================================= */
-
 let firebaseReady = false;
-
 let currentUser = null;
 
 onAuthStateChanged(auth, (user) => {
-
   if (user) {
-
     currentUser = user;
-
     firebaseReady = true;
-
-    console.log(
-      "Firebase user connected:",
-      user.uid
-    );
-
+    console.log("Firebase user connected:", user.uid);
   }
-
 });
 
-
-/* =========================================
-   ANONYMOUS LOGIN
-========================================= */
-
 async function initializeAuthentication() {
-
   try {
-
     await signInAnonymously(auth);
-
-    console.log(
-      "Firebase anonymous authentication successful."
-    );
-
+    console.log("Firebase anonymous authentication successful.");
   } catch (error) {
-
-    console.error(
-      "Firebase authentication error:",
-      error
-    );
-
-    alert(
-      "Firebase login nahi ho saka. " +
-      "Firebase Authentication mein Anonymous sign-in enable karo."
-    );
-
+    console.error("Firebase authentication error:", error);
+    alert("Firebase login nahi ho saka. Firebase Authentication mein Anonymous sign-in enable karo.");
   }
-
 }
-
 initializeAuthentication();
 
-
 /* =========================================
-   PASSCODE SYSTEM
+   PASSCODE SYSTEM (UNCHANGED)
 ========================================= */
-
 let currentStep = 1;
 
 window.checkStep = function(step) {
-
-  const input =
-    document.getElementById(
-      "code" + step
-    ).value.trim();
-
-  const error =
-    document.getElementById(
-      "error" + step
-    );
-
+  const input = document.getElementById("code" + step).value.trim();
+  const error = document.getElementById("error" + step);
   let correctCode = "";
-
-  if (step === 1) {
-    correctCode = PASSCODE_1;
-  }
-
-  if (step === 2) {
-    correctCode = PASSCODE_2;
-  }
-
-  if (step === 3) {
-    correctCode = PASSCODE_3;
-  }
-
+  if (step === 1) correctCode = PASSCODE_1;
+  if (step === 2) correctCode = PASSCODE_2;
+  if (step === 3) correctCode = PASSCODE_3;
 
   if (input === correctCode) {
-
     error.textContent = "";
-
-
     if (step < 3) {
-
-      document
-        .getElementById("step" + step)
-        .classList.remove("active");
-
-      document
-        .getElementById("step" + (step + 1))
-        .classList.add("active");
-
-      document
-        .querySelectorAll(".progress span")[step]
-        .classList.add("active");
-
+      document.getElementById("step" + step).classList.remove("active");
+      document.getElementById("step" + (step + 1)).classList.add("active");
+      document.querySelectorAll(".progress span")[step].classList.add("active");
       currentStep++;
-
     } else {
-
       unlockApp();
-
     }
-
   } else {
-
-    error.textContent =
-      "Wrong code. Access cancelled. ❌";
-
-    setTimeout(() => {
-
-      location.reload();
-
-    }, 1200);
-
+    error.textContent = "Wrong code. Access cancelled. ❌";
+    setTimeout(() => { location.reload(); }, 1200);
   }
-
 };
-
-
-/* =========================================
-   UNLOCK APP
-========================================= */
 
 function unlockApp() {
-
-  document
-    .getElementById("lockScreen")
-    .style.display = "none";
-
-  document
-    .getElementById("verifiedPopup")
-    .style.display = "flex";
-
-
+  document.getElementById("lockScreen").style.display = "none";
+  document.getElementById("verifiedPopup").style.display = "flex";
   setTimeout(() => {
-
-    document
-      .getElementById("verifiedPopup")
-      .style.display = "none";
-
-    document
-      .getElementById("chatApp")
-      .style.display = "flex";
-
+    document.getElementById("verifiedPopup").style.display = "none";
+    document.getElementById("chatApp").style.display = "flex";
     loadMessages();
-
   }, 2200);
-
 }
 
-
-/* =========================================
-   LOCK AGAIN
-========================================= */
-
-window.lockAgain = function() {
-
-  /*
-     This only locks THIS device.
-
-     It does NOT affect the other person's device.
-  */
-
-  location.reload();
-
-};
-
-
-/* =========================================
-   WAIT FOR FIREBASE AUTH
-========================================= */
+window.lockAgain = function() { location.reload(); };
 
 function waitForFirebase() {
-
   return new Promise((resolve, reject) => {
-
-    if (firebaseReady && currentUser) {
-
-      resolve(currentUser);
-
-      return;
-
-    }
-
+    if (firebaseReady && currentUser) { resolve(currentUser); return; }
     let attempts = 0;
-
     const timer = setInterval(() => {
-
       attempts++;
-
-      if (firebaseReady && currentUser) {
-
-        clearInterval(timer);
-
-        resolve(currentUser);
-
-      }
-
-      if (attempts >= 100) {
-
-        clearInterval(timer);
-
-        reject(
-          new Error(
-            "Firebase authentication timeout."
-          )
-        );
-
-      }
-
+      if (firebaseReady && currentUser) { clearInterval(timer); resolve(currentUser); }
+      if (attempts >= 100) { clearInterval(timer); reject(new Error("Firebase authentication timeout.")); }
     }, 100);
-
   });
-
 }
 
-
 /* =========================================
-   SEND MESSAGE
+   REPLY STATE
 ========================================= */
+let replyTo = null;               // { id, text, senderId }
+const messageCache = {};          // id -> { text, senderId }
 
-window.sendMessage = async function() {
+function senderName(senderId) {
+  return (currentUser && senderId === currentUser.uid) ? "You" : "Them 💗";
+}
 
-  const input =
-    document.getElementById(
-      "messageInput"
-    );
+function startReply(id) {
+  const m = messageCache[id];
+  if (!m) return;
+  replyTo = { id: id, text: m.text, senderId: m.senderId };
+  document.getElementById("replyName").textContent = senderName(m.senderId);
+  document.getElementById("replyText").textContent = m.text;
+  document.getElementById("replyBar").style.display = "flex";
+  document.getElementById("messageInput").focus();
+}
 
-  const sendButton =
-    document.getElementById(
-      "sendButton"
-    );
-
-  const text =
-    input.value.trim();
-
-
-  if (text === "") {
-
-    return;
-
-  }
-
-
-  try {
-
-    const user =
-      await waitForFirebase();
-
-
-    sendButton.disabled = true;
-
-
-    await addDoc(
-      messagesRef,
-      {
-
-        text: text,
-
-        senderId: user.uid,
-
-        deviceId: deviceId,
-
-        time: new Date()
-          .toLocaleTimeString(
-            [],
-            {
-              hour: "2-digit",
-              minute: "2-digit"
-            }
-          ),
-
-        createdAt:
-          serverTimestamp()
-
-      }
-    );
-
-
-    input.value = "";
-
-    input.focus();
-
-
-  } catch (error) {
-
-    console.error(
-      "Message send error:",
-      error
-    );
-
-    alert(
-      "Message send nahi hua. " +
-      "Firebase Firestore Rules check karo."
-    );
-
-  } finally {
-
-    sendButton.disabled = false;
-
-  }
-
+window.cancelReply = function() {
+  replyTo = null;
+  document.getElementById("replyBar").style.display = "none";
 };
 
+function jumpTo(id) {
+  const el = document.getElementById("msg-" + id);
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "center" });
+  el.classList.add("flash");
+  setTimeout(() => el.classList.remove("flash"), 1300);
+}
+
+/* =========================================
+   DATE HELPERS
+========================================= */
+function dateLabel(d) {
+  const today = new Date();
+  const yest = new Date();
+  yest.setDate(today.getDate() - 1);
+  if (d.toDateString() === today.toDateString()) return "Today";
+  if (d.toDateString() === yest.toDateString()) return "Yesterday";
+  return d.toLocaleDateString([], { day: "numeric", month: "short", year: "numeric" });
+}
+
+/* =========================================
+   SEND MESSAGE (same fields + optional replyTo)
+========================================= */
+window.sendMessage = async function() {
+  const input = document.getElementById("messageInput");
+  const sendButton = document.getElementById("sendButton");
+  const text = input.value.trim();
+  if (text === "") return;
+
+  try {
+    const user = await waitForFirebase();
+    sendButton.disabled = true;
+
+    const data = {
+      text: text,
+      senderId: user.uid,
+      deviceId: deviceId,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      createdAt: serverTimestamp()
+    };
+
+    if (replyTo) {
+      data.replyTo = {
+        id: replyTo.id,
+        text: replyTo.text.substring(0, 200),
+        senderId: replyTo.senderId
+      };
+    }
+
+    await addDoc(messagesRef, data);
+
+    input.value = "";
+    cancelReply();
+    input.focus();
+  } catch (error) {
+    console.error("Message send error:", error);
+    alert("Message send nahi hua. Firebase Firestore Rules check karo.");
+  } finally {
+    sendButton.disabled = false;
+  }
+};
 
 /* =========================================
    LOAD MESSAGES - REAL TIME
 ========================================= */
-
 let unsubscribeMessages = null;
 
 function loadMessages() {
+  const chatArea = document.getElementById("chatArea");
 
-  const chatArea =
-    document.getElementById(
-      "chatArea"
-    );
+  if (unsubscribeMessages) { unsubscribeMessages(); unsubscribeMessages = null; }
 
+  const q = query(messagesRef, orderBy("createdAt", "asc"));
 
-  /*
-     If this function is accidentally called
-     more than once, remove the previous listener.
+  unsubscribeMessages = onSnapshot(q,
+    (snapshot) => {
+      chatArea.innerHTML = "";
 
-     This prevents duplicate listeners.
-  */
+      const welcome = document.createElement("div");
+      welcome.className = "welcome";
+      welcome.innerHTML = "✨ Your private space ✨<br>Messages are saved online.";
+      chatArea.appendChild(welcome);
 
-  if (unsubscribeMessages) {
+      if (snapshot.empty) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.innerHTML = "No messages yet...<br>Start your little conversation 💌";
+        chatArea.appendChild(empty);
+        return;
+      }
 
-    unsubscribeMessages();
+      let lastDateKey = "";
 
-    unsubscribeMessages = null;
+      snapshot.forEach((doc) => {
+        const msg = doc.data({ serverTimestamps: "estimate" });
+        const id = doc.id;
+        messageCache[id] = { text: msg.text || "", senderId: msg.senderId };
 
-  }
+        /* ---- date separator ---- */
+        let when = null;
+        if (msg.createdAt && msg.createdAt.toDate) when = msg.createdAt.toDate();
 
-
-  const q = query(
-    messagesRef,
-    orderBy("createdAt", "asc")
-  );
-
-
-  unsubscribeMessages =
-    onSnapshot(
-
-      q,
-
-      (snapshot) => {
-
-        chatArea.innerHTML = "";
-
-
-        const welcome =
-          document.createElement("div");
-
-        welcome.className = "welcome";
-
-        welcome.innerHTML =
-          "✨ Your private space ✨<br>" +
-          "Messages are saved online.";
-
-        chatArea.appendChild(
-          welcome
-        );
-
-
-        if (snapshot.empty) {
-
-          const empty =
-            document.createElement("div");
-
-          empty.className = "empty";
-
-          empty.innerHTML =
-            "No messages yet...<br>" +
-            "Start your little conversation 💌";
-
-          chatArea.appendChild(
-            empty
-          );
-
-          return;
-
+        if (when) {
+          const key = when.toDateString();
+          if (key !== lastDateKey) {
+            lastDateKey = key;
+            const sep = document.createElement("div");
+            sep.className = "dateSep";
+            sep.textContent = dateLabel(when);
+            chatArea.appendChild(sep);
+          }
         }
 
+        /* ---- bubble ---- */
+        const div = document.createElement("div");
+        div.id = "msg-" + id;
+        div.className = (currentUser && msg.senderId === currentUser.uid) ? "message sent" : "message received";
 
-        snapshot.forEach((doc) => {
+        /* ---- quoted reply ---- */
+        if (msg.replyTo) {
+          const quote = document.createElement("div");
+          quote.className = "quote";
+          const qn = document.createElement("b");
+          qn.textContent = senderName(msg.replyTo.senderId);
+          const qt = document.createElement("span");
+          qt.textContent = msg.replyTo.text || "";
+          quote.appendChild(qn);
+          quote.appendChild(qt);
+          quote.addEventListener("click", () => jumpTo(msg.replyTo.id));
+          div.appendChild(quote);
+        }
 
-          const msg = doc.data();
+        const text = document.createElement("span");
+        text.className = "messageText";
+        text.textContent = msg.text || "";
 
-          const div =
-            document.createElement(
-              "div"
-            );
+        const time = document.createElement("span");
+        time.className = "time";
+        time.textContent = when
+          ? when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+          : (msg.time || "");
 
+        div.appendChild(text);
+        div.appendChild(time);
 
-          /*
-             IMPORTANT FIX:
+        /* ---- reply button (desktop) ---- */
+        const rb = document.createElement("button");
+        rb.className = "replyBtn";
+        rb.textContent = "↩";
+        rb.title = "Reply";
+        rb.addEventListener("click", (e) => { e.stopPropagation(); startReply(id); });
+        div.appendChild(rb);
 
-             Message ownership is determined
-             from Firebase's unique user ID.
-
-             One person's device does NOT
-             replace or disconnect another person's
-             session.
-          */
-
-          if (
-            currentUser &&
-            msg.senderId === currentUser.uid
-          ) {
-
-            div.className =
-              "message sent";
-
-          } else {
-
-            div.className =
-              "message received";
-
-          }
-
-
-          const text =
-            document.createElement(
-              "span"
-            );
-
-          text.className =
-            "messageText";
-
-          /*
-             textContent prevents HTML injection.
-          */
-
-          text.textContent =
-            msg.text || "";
-
-
-          const time =
-            document.createElement(
-              "span"
-            );
-
-          time.className =
-            "time";
-
-          time.textContent =
-            msg.time || "";
-
-
-          div.appendChild(text);
-
-          div.appendChild(time);
-
-          chatArea.appendChild(div);
-
+        /* ---- swipe to reply (mobile) ---- */
+        let sx = 0, sy = 0, dx = 0, swiping = false;
+        div.addEventListener("touchstart", (e) => {
+          sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; swiping = true;
+        }, { passive: true });
+        div.addEventListener("touchmove", (e) => {
+          if (!swiping) return;
+          dx = e.touches[0].clientX - sx;
+          const dy = Math.abs(e.touches[0].clientY - sy);
+          if (dy > 30) { swiping = false; div.style.transform = ""; return; }
+          if (dx > 0) div.style.transform = "translateX(" + Math.min(dx, 70) + "px)";
+        }, { passive: true });
+        div.addEventListener("touchend", () => {
+          div.style.transform = "";
+          if (swiping && dx > 60) startReply(id);
+          swiping = false;
         });
 
+        chatArea.appendChild(div);
+      });
 
-        chatArea.scrollTop =
-          chatArea.scrollHeight;
-
-      },
-
-      (error) => {
-
-        console.error(
-          "Firestore listener error:",
-          error
-        );
-
-
-        chatArea.innerHTML = "";
-
-        const errorBox =
-          document.createElement(
-            "div"
-          );
-
-        errorBox.className =
-          "empty";
-
-        errorBox.innerHTML =
-          "Messages load nahi ho rahe. 💔<br>" +
-          "Firebase Firestore Rules check karo.";
-
-        chatArea.appendChild(
-          errorBox
-        );
-
-      }
-
-    );
-
-}
-
-
-/* =========================================
-   ENTER TO SEND
-========================================= */
-
-document
-  .getElementById("messageInput")
-  .addEventListener(
-    "keydown",
-    function(e) {
-
-      if (e.key === "Enter") {
-
-        e.preventDefault();
-
-        sendMessage();
-
-      }
-
+      chatArea.scrollTop = chatArea.scrollHeight;
+    },
+    (error) => {
+      console.error("Firestore listener error:", error);
+      chatArea.innerHTML = "";
+      const errorBox = document.createElement("div");
+      errorBox.className = "empty";
+      errorBox.innerHTML = "Messages load nahi ho rahe. 💔<br>Firebase Firestore Rules check karo.";
+      chatArea.appendChild(errorBox);
     }
   );
-
-
-/* =========================================
-   FLASHING STARS
-========================================= */
-
-for (let i = 0; i < 35; i++) {
-
-  const star =
-    document.createElement("div");
-
-  star.className = "star";
-
-  star.innerHTML = "✦";
-
-  star.style.left =
-    Math.random() * 100 + "%";
-
-  star.style.top =
-    Math.random() * 100 + "%";
-
-  star.style.fontSize =
-    (Math.random() * 10 + 5) + "px";
-
-  star.style.animationDelay =
-    Math.random() * 3 + "s";
-
-  document
-    .getElementById("stars")
-    .appendChild(star);
-
 }
 
+/* ENTER TO SEND */
+document.getElementById("messageInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") { e.preventDefault(); sendMessage(); }
+});
 
-/* =========================================
-   CLEANUP
-========================================= */
+/* FLASHING STARS */
+for (let i = 0; i < 35; i++) {
+  const star = document.createElement("div");
+  star.className = "star";
+  star.innerHTML = "✦";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.fontSize = (Math.random() * 10 + 5) + "px";
+  star.style.animationDelay = Math.random() * 3 + "s";
+  document.getElementById("stars").appendChild(star);
+}
 
-window.addEventListener(
-  "beforeunload",
-  () => {
-
-    /*
-       We intentionally DO NOT change,
-       delete, or lock the other person's
-       Firebase session here.
-    */
-
-    if (unsubscribeMessages) {
-
-      unsubscribeMessages();
-
-    }
-
-  }
-);
+/* CLEANUP */
+window.addEventListener("beforeunload", () => {
+  if (unsubscribeMessages) unsubscribeMessages();
+});
 
 </script>
-
 </body>
+</html>
