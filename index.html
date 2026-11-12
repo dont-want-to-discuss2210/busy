@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MR PAGAL 💗</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Color+Emoji&display=swap');
 *{box-sizing:border-box}
-body{margin:0;font-family:Poppins,sans-serif;background:#120b20;color:white;min-height:100vh;overflow:hidden}
+body{margin:0;font-family:Poppins,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji","Android Emoji",EmojiSymbols,sans-serif;background:#120b20;color:white;min-height:100vh;overflow:hidden}
 body:before{content:"";position:fixed;width:500px;height:500px;background:#ff4fa3;filter:blur(150px);opacity:.18;top:-150px;left:-150px;pointer-events:none}
 body:after{content:"";position:fixed;width:400px;height:400px;background:#8b5cf6;filter:blur(150px);opacity:.15;bottom:-150px;right:-100px;pointer-events:none}
 .stars{position:fixed;inset:0;pointer-events:none;overflow:hidden}
-.star{position:absolute;color:#ffd6f0;animation:twinkle 2s infinite alternate;opacity:.5}
+.star{position:absolute;background:#ffd6f0;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);animation:twinkle 2s infinite alternate;opacity:.5}
 @keyframes twinkle{from{opacity:.15;transform:scale(.8)}to{opacity:.8;transform:scale(1.2)}}
 
 /* LOCK SCREEN */
@@ -24,7 +24,7 @@ body:after{content:"";position:fixed;width:400px;height:400px;background:#8b5cf6
 .step{display:none}
 .step.active{display:block}
 .stepTitle{color:#ff9bc9;font-size:13px;margin:25px 0 15px}
-input{width:100%;padding:15px;border-radius:12px;border:1px solid #493653;background:#1c112b;color:white;text-align:center;font-size:18px;letter-spacing:5px;outline:none}
+input{font-family:inherit;width:100%;padding:15px;border-radius:12px;border:1px solid #493653;background:#1c112b;color:white;text-align:center;font-size:18px;letter-spacing:5px;outline:none}
 input:focus{border-color:#ff5fa8;box-shadow:0 0 15px rgba(255,95,168,.2)}
 button{border:none;cursor:pointer;font-family:inherit}
 .unlockBtn{width:100%;margin-top:15px;padding:14px;border-radius:12px;background:linear-gradient(135deg,#ff4f9a,#a855f7);color:white;font-weight:600;font-size:15px;box-shadow:0 5px 20px rgba(255,79,154,.2)}
@@ -47,6 +47,8 @@ button{border:none;cursor:pointer;font-family:inherit}
 .profile{display:flex;align-items:center;gap:12px}
 .avatar{width:45px;height:45px;border-radius:50%;background:linear-gradient(135deg,#ff4f9a,#8b5cf6);display:flex;justify-content:center;align-items:center;font-size:21px;box-shadow:0 0 20px rgba(255,79,163,.2)}
 .profile h3{margin:0;font-size:15px}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#9edfbf;margin-right:4px}
+.replyBtn,#cancelReply,.sendBtn{display:flex;align-items:center;justify-content:center}
 .profile small{color:#9edfbf;font-size:11px}
 .lockBtn{background:#2a1839;color:#e8cce3;padding:9px 12px;border-radius:10px;font-size:12px}
 .chatArea{flex:1;overflow-y:auto;padding:25px 18px;display:flex;flex-direction:column;gap:12px}
@@ -61,7 +63,9 @@ button{border:none;cursor:pointer;font-family:inherit}
 .message.sent{align-self:flex-end;background:linear-gradient(135deg,#ff4f9a,#b04cf0);border-bottom-right-radius:5px}
 .message.received{align-self:flex-start;background:#251634;border:1px solid #3c2850;border-bottom-left-radius:5px}
 .message.flash{box-shadow:0 0 0 2px #ffd6f0,0 0 25px rgba(255,214,240,.5)}
-.messageText{display:block}
+.messageText{display:block;overflow-wrap:anywhere}
+.messageText a{color:#fff;text-decoration:underline;text-underline-offset:2px;font-weight:500;word-break:break-all}
+.message.received .messageText a{color:#ff9bc9}
 .time{display:block;font-size:9px;opacity:.6;margin-top:4px;text-align:right}
 
 /* QUOTED REPLY */
@@ -147,7 +151,7 @@ button{border:none;cursor:pointer;font-family:inherit}
       <div class="avatar">💗</div>
       <div>
         <h3>MR PAGAL ✨</h3>
-        <small>● Private & Verified</small>
+        <small><i class="dot"></i> Private &amp; Verified</small>
       </div>
     </div>
     <button class="lockBtn" onclick="lockAgain()">🔒 Lock</button>
@@ -161,12 +165,12 @@ button{border:none;cursor:pointer;font-family:inherit}
   <!-- reply preview -->
   <div id="replyBar">
     <div class="quote"><b id="replyName"></b><span id="replyText"></span></div>
-    <button id="cancelReply" onclick="cancelReply()">✕</button>
+    <button id="cancelReply" onclick="cancelReply()" aria-label="Cancel reply"><svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
   </div>
 
   <div class="chatInput">
     <input type="text" id="messageInput" placeholder="Write something sweet... 💌" autocomplete="off">
-    <button class="sendBtn" id="sendButton" onclick="sendMessage()">➤</button>
+    <button class="sendBtn" id="sendButton" onclick="sendMessage()" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
   </div>
 </div>
 
@@ -327,6 +331,30 @@ function jumpTo(id) {
 }
 
 /* =========================================
+   MAKE LINKS CLICKABLE (safe: no innerHTML)
+========================================= */
+function linkify(el, str) {
+  const re = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
+  let last = 0, m;
+  while ((m = re.exec(str)) !== null) {
+    let url = m[0];
+    let trail = "";
+    const t = url.match(/[.,!?;:)\]}]+$/);
+    if (t) { trail = t[0]; url = url.slice(0, -trail.length); }
+    if (m.index > last) el.appendChild(document.createTextNode(str.slice(last, m.index)));
+    const a = document.createElement("a");
+    a.href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = url;
+    el.appendChild(a);
+    if (trail) el.appendChild(document.createTextNode(trail));
+    last = m.index + m[0].length;
+  }
+  if (last < str.length) el.appendChild(document.createTextNode(str.slice(last)));
+}
+
+/* =========================================
    DATE HELPERS
 ========================================= */
 function dateLabel(d) {
@@ -452,7 +480,7 @@ function loadMessages() {
 
         const text = document.createElement("span");
         text.className = "messageText";
-        text.textContent = msg.text || "";
+        linkify(text, msg.text || "");
 
         const time = document.createElement("span");
         time.className = "time";
@@ -466,7 +494,7 @@ function loadMessages() {
         /* ---- reply button (desktop) ---- */
         const rb = document.createElement("button");
         rb.className = "replyBtn";
-        rb.textContent = "↩";
+        rb.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>';
         rb.title = "Reply";
         rb.addEventListener("click", (e) => { e.stopPropagation(); startReply(id); });
         div.appendChild(rb);
@@ -514,10 +542,11 @@ document.getElementById("messageInput").addEventListener("keydown", function(e) 
 for (let i = 0; i < 35; i++) {
   const star = document.createElement("div");
   star.className = "star";
-  star.innerHTML = "✦";
-  star.style.left = Math.random() * 100 + "%";
+    star.style.left = Math.random() * 100 + "%";
   star.style.top = Math.random() * 100 + "%";
-  star.style.fontSize = (Math.random() * 10 + 5) + "px";
+  const sz = (Math.random() * 10 + 5) + "px";
+  star.style.width = sz;
+  star.style.height = sz;
   star.style.animationDelay = Math.random() * 3 + "s";
   document.getElementById("stars").appendChild(star);
 }
