@@ -6,6 +6,7 @@
 <title>Mr Pagal &amp; Mrs Pagal World 💗</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Color+Emoji&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&display=swap');
 *{box-sizing:border-box}
 body{margin:0;font-family:Poppins,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji","Android Emoji",EmojiSymbols,sans-serif;background:#120b20;color:white;min-height:100vh;overflow:hidden}
 body:before{content:"";position:fixed;width:500px;height:500px;background:#ff4fa3;filter:blur(150px);opacity:.18;top:-150px;left:-150px;pointer-events:none}
@@ -99,6 +100,88 @@ button{border:none;cursor:pointer;font-family:inherit}
   .message{max-width:85%}
   .lockBox{padding:30px 20px}
 }
+
+/* FILES / MEDIA */
+.chatInput{align-items:center}
+.attachBtn{width:44px;height:44px;flex:none;background:#2a1839;color:#ffd6f0;border-radius:12px;display:flex;align-items:center;justify-content:center;padding:0}
+.media{position:relative;display:block;width:230px;max-width:100%;border-radius:12px;overflow:hidden;margin-bottom:6px;cursor:pointer;background:#0d0716;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.media img,.media video,.vaultItem img,.vaultItem video{display:block;width:100%;max-height:260px;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+.play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.25);pointer-events:none}
+.play i{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.88);position:relative;display:block}
+.play i:after{content:"";position:absolute;left:16px;top:12px;border-left:14px solid #b04cf0;border-top:9px solid transparent;border-bottom:9px solid transparent}
+.pdfCard{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.22);border-radius:12px;padding:10px 12px;margin-bottom:6px;cursor:pointer}
+.pdfIcon{width:36px;height:42px;flex:none;border-radius:6px;background:#ff5fa8;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#fff}
+.pdfCard b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:150px}
+.pdfCard small{font-size:10px;opacity:.7}
+#uploadBar{display:none;padding:8px 15px;background:rgba(20,10,35,.9);border-top:1px solid rgba(255,255,255,.08);font-size:11px;color:#d9c6e6}
+#uploadBar div{height:4px;background:#35233f;border-radius:10px;margin-top:6px;overflow:hidden}
+#uploadFill{height:100%;width:0;background:#ff5fa8;transition:width .2s}
+#viewer{display:none;position:fixed;inset:0;z-index:30;background:rgba(5,2,10,.96);align-items:center;justify-content:center;padding:15px;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+#viewerBody img,#viewerBody video{max-width:100%;max-height:85vh;border-radius:10px;display:block}
+#viewerBody img{pointer-events:none;-webkit-user-drag:none}
+.closeBtn{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;background:#2a1839;color:#fff;display:flex;align-items:center;justify-content:center;padding:0;z-index:2}
+#vault{display:none;position:fixed;inset:0;z-index:25;background:#120b20;flex-direction:column;max-width:700px;margin:auto}
+.vaultHead{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);font-weight:600;font-size:15px}
+.vaultHead .closeBtn{position:static}
+.vaultGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:12px;overflow-y:auto}
+.vaultItem{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;background:#251634;cursor:pointer;-webkit-touch-callout:none;user-select:none}
+.vaultItem img,.vaultItem video{height:100%;max-height:none}
+.vaultItem .pdfIcon{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.vaultItem small{position:absolute;left:6px;right:6px;bottom:5px;font-size:9px;text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vidPh{height:130px;background:linear-gradient(135deg,#3a2150,#1d102b)}
+.vidSz{position:absolute;left:8px;bottom:6px;font-size:10px;opacity:.85;pointer-events:none}
+.vaultItem>div{height:100%}
+.vaultItem .vidPh{height:100%}
+.hdrBtns{display:flex;gap:8px}
+body.hideMedia .media,body.hideMedia #viewer,body.hideMedia .vaultGrid{filter:blur(28px)}
+@media print{.media,#viewer,#vault{display:none!important}}
+
+/* QUOTE STRIP (above chat) */
+#quoteStrip{position:relative;overflow:hidden;display:flex;align-items:center;gap:8px;padding:9px 16px;cursor:pointer;background:linear-gradient(90deg,rgba(255,79,163,.25),rgba(168,85,247,.25),rgba(94,231,255,.2));border-bottom:1px solid rgba(255,255,255,.12)}
+#quoteStrip:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-100%);animation:shine 3.5s infinite}
+@keyframes shine{to{transform:translateX(100%)}}
+#quoteStripText{flex:1;min-width:0;font-family:"Dancing Script",cursive,Poppins,sans-serif;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 0 10px rgba(255,79,163,.8);transition:opacity .3s}
+#quoteStripText.out{opacity:0}
+
+/* QUOTE WALL */
+#quoteWall{display:none;position:fixed;inset:0;z-index:28;overflow:hidden;background:linear-gradient(120deg,#1a0633,#3a0a4f,#0b1a4a,#4a0a3a);background-size:300% 300%;animation:bgShift 12s ease infinite}
+@keyframes bgShift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+.spark{position:absolute;border-radius:50%;animation:tw 2.2s infinite alternate,floatUp 9s linear infinite;pointer-events:none}
+@keyframes tw{from{opacity:.1;transform:scale(.5)}to{opacity:1;transform:scale(1.4)}}
+@keyframes floatUp{from{margin-top:0}to{margin-top:-60px}}
+.rise{position:absolute;bottom:-40px;opacity:0;animation:rise 9s linear infinite;pointer-events:none;filter:drop-shadow(0 0 6px #ff4fa3)}
+@keyframes rise{0%{transform:translateY(0) scale(.6);opacity:0}15%{opacity:.9}100%{transform:translateY(-110vh) scale(1.2) rotate(25deg);opacity:0}}
+.bolt{position:absolute;height:42vh;width:auto;fill:#fff;opacity:0;pointer-events:none;filter:drop-shadow(0 0 8px #ff4fa3) drop-shadow(0 0 22px #a855f7) drop-shadow(0 0 40px #5ee7ff);animation:zap 6s infinite}
+.b1{left:5%;top:4%}
+.b2{left:46%;top:-2%;animation-duration:8s;animation-delay:2s;height:35vh}
+.b3{right:5%;top:8%;animation-duration:7s;animation-delay:4s}
+@keyframes zap{0%,90%,100%{opacity:0}91%{opacity:1}92%{opacity:.2}93%{opacity:1}95%{opacity:0}}
+.flashO{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 30%,rgba(255,200,240,.45),transparent 65%);opacity:0;animation:flashA 6s infinite}
+@keyframes flashA{0%,90%,100%{opacity:0}91%{opacity:1}94%{opacity:0}}
+.wallTitle{position:absolute;top:22px;left:0;right:0;text-align:center;font-family:"Dancing Script",cursive;font-size:26px;text-shadow:0 0 12px #ff4fa3,0 0 26px #a855f7;pointer-events:none}
+.qCard{position:absolute;width:80%;max-width:360px;padding:24px 22px 18px;border-radius:24px;text-align:center;background:rgba(20,8,40,.6);backdrop-filter:blur(6px);border:2px solid transparent;animation:drift 9s ease-in-out infinite,glow 3s ease-in-out infinite alternate}
+.qCard.mr{top:17%;left:8%;--c1:#ff4fa3;--c2:#ffd86b;background:linear-gradient(rgba(25,8,40,.82),rgba(25,8,40,.82)) padding-box,linear-gradient(120deg,#ff4fa3,#ffd86b,#ff4fa3) border-box}
+.qCard.mrs{top:52%;right:8%;--c1:#a855f7;--c2:#5ee7ff;background:linear-gradient(rgba(25,8,40,.82),rgba(25,8,40,.82)) padding-box,linear-gradient(120deg,#a855f7,#5ee7ff,#a855f7) border-box;animation-delay:-4s,-1s}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(-2deg)}25%{transform:translate(18px,-22px) rotate(1.5deg)}50%{transform:translate(-14px,-30px) rotate(-1deg)}75%{transform:translate(-20px,12px) rotate(2deg)}}
+@keyframes glow{from{box-shadow:0 0 18px var(--c1)}to{box-shadow:0 0 42px var(--c2),0 0 70px var(--c1)}}
+.qText{font-family:"Dancing Script",cursive,Poppins,sans-serif;font-size:25px;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 8px var(--c1),0 0 22px var(--c1)}
+.qText.empty{font-size:18px;opacity:.75;margin:0}
+.qBy{margin-top:12px;font-size:12px;letter-spacing:1px;color:var(--c2);text-shadow:0 0 8px var(--c2)}
+.wallBtns{position:absolute;bottom:22px;left:0;right:0;display:flex;justify-content:center;gap:10px}
+.wallBtns button{padding:12px 20px;border-radius:30px;color:#fff;font-weight:600;font-size:13px;background:linear-gradient(135deg,#ff4f9a,#a855f7);box-shadow:0 0 22px rgba(255,79,154,.6)}
+#wallClose{position:absolute;top:14px;right:14px;z-index:2}
+#qEditor{display:none;position:fixed;inset:0;z-index:29;background:rgba(8,3,18,.8);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
+.qEdBox{width:100%;max-width:380px;padding:22px;border-radius:22px;background:#1d102b;border:1px solid #ff75b8;box-shadow:0 0 40px rgba(255,79,163,.3);text-align:center}
+.qEdBox h3{margin:0 0 4px;font-family:"Dancing Script",cursive;font-size:24px}
+.qEdBox p{margin:0 0 14px;font-size:11px;color:#bca9c9}
+.roleRow{display:flex;gap:8px;margin-bottom:12px}
+.roleRow button{flex:1;padding:11px 6px;border-radius:12px;background:#2a1839;color:#e8cce3;font-size:12px;border:1px solid #493653}
+.roleRow button.on{background:linear-gradient(135deg,#ff4f9a,#a855f7);color:#fff;border-color:#ff75b8}
+.qEdBox textarea{font-family:inherit;width:100%;padding:13px;border-radius:12px;border:1px solid #493653;background:#1c112b;color:#fff;font-size:14px;resize:none;outline:none}
+.qEdBox textarea:focus{border-color:#ff5fa8}
+.qCount{font-size:10px;text-align:right;color:#a998b5;margin:4px 2px 0}
+.qCancel{margin-top:8px;background:none;color:#bca9c9;font-size:12px;padding:8px}
+@media (prefers-reduced-motion:reduce){.qCard,.bolt,.flashO,.spark,.rise,#quoteWall{animation:none}}
 </style>
 </head>
 <body>
@@ -155,8 +238,10 @@ button{border:none;cursor:pointer;font-family:inherit}
         <small><i class="dot"></i> Private &amp; Verified</small>
       </div>
     </div>
-    <button class="lockBtn" onclick="lockAgain()">🔒 Lock</button>
+    <div class="hdrBtns"><button class="lockBtn" onclick="openVault()">📁 Vault</button><button class="lockBtn" onclick="lockAgain()">🔒 Lock</button></div>
   </div>
+
+  <div id="quoteStrip" onclick="openWall()"><span>💌</span><span id="quoteStripText">Tap to write your love quote ✨</span></div>
 
   <div class="chatArea" id="chatArea">
     <div class="welcome">✨ Your private space ✨<br>Messages are saved online.</div>
@@ -169,9 +254,54 @@ button{border:none;cursor:pointer;font-family:inherit}
     <button id="cancelReply" onclick="cancelReply()" aria-label="Cancel reply"><svg width="12" height="12" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
   </div>
 
+  <div id="uploadBar"><span id="uploadLabel"></span><div><div id="uploadFill"></div></div></div>
+
   <div class="chatInput">
+    <button class="attachBtn" onclick="document.getElementById('fileInput').click()" aria-label="Attach file"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11l-9 9a5 5 0 0 1-7-7l9-9a3.5 3.5 0 0 1 5 5l-9 9a2 2 0 0 1-3-3l8-8"/></svg></button>
+    <input type="file" id="fileInput" accept="image/*,video/*,application/pdf" style="display:none">
     <input type="text" id="messageInput" placeholder="Write something sweet... 💌" autocomplete="off">
     <button class="sendBtn" id="sendButton" onclick="sendMessage()" aria-label="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg></button>
+  </div>
+</div>
+
+<!-- VIEWER -->
+<div id="viewer">
+  <button class="closeBtn" onclick="closeViewer()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+  <div id="viewerBody"></div>
+</div>
+
+<!-- VAULT -->
+<div id="vault">
+  <div class="vaultHead"><span>📁 Our Vault</span><button class="closeBtn" onclick="closeVault()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></button></div>
+  <div class="vaultGrid" id="vaultGrid"></div>
+</div>
+
+<!-- QUOTE WALL -->
+<div id="quoteWall">
+  <div id="wallSparks"></div>
+  <div class="flashO"></div>
+  <svg class="bolt b1" viewBox="0 0 60 200"><polygon points="35,0 8,95 30,95 12,200 56,78 33,78 52,0"/></svg>
+  <svg class="bolt b2" viewBox="0 0 60 200"><polygon points="35,0 8,95 30,95 12,200 56,78 33,78 52,0"/></svg>
+  <svg class="bolt b3" viewBox="0 0 60 200"><polygon points="35,0 8,95 30,95 12,200 56,78 33,78 52,0"/></svg>
+  <button class="closeBtn" id="wallClose" onclick="closeWall()" aria-label="Close"><svg width="14" height="14" viewBox="0 0 12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 2l8 8M10 2l-8 8"/></svg></button>
+  <div class="wallTitle">Mr Pagal &amp; Mrs Pagal ✨</div>
+  <div class="qCard mr"><div class="qText" id="qtext-mr"></div><div class="qBy">— MR PAGAL 💗</div></div>
+  <div class="qCard mrs"><div class="qText" id="qtext-mrs"></div><div class="qBy">— MRS PAGAL 💞</div></div>
+  <div class="wallBtns"><button onclick="openEditor()">✍️ Write my quote</button></div>
+</div>
+
+<div id="qEditor">
+  <div class="qEdBox">
+    <h3>Your love quote 💌</h3>
+    <p>Sirf ek chhoti line. Nayi likhne par purani badal jayegi.</p>
+    <div class="roleRow">
+      <button id="roleMr" onclick="setRole('mr')">💗 Mr Pagal</button>
+      <button id="roleMrs" onclick="setRole('mrs')">💞 Mrs Pagal</button>
+    </div>
+    <textarea id="qInput" rows="3" maxlength="120" placeholder="Ek pyaari si line likho..."></textarea>
+    <div class="qCount" id="qCount">0/120</div>
+    <button class="unlockBtn" id="qSave" onclick="saveQuote()">Send my quote 💌</button>
+    <button class="qCancel" onclick="closeEditor()">Cancel</button>
   </div>
 </div>
 
@@ -182,7 +312,8 @@ button{border:none;cursor:pointer;font-family:inherit}
 ========================================= */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, where, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
 
 /* =========================================
    PASSCODES (UNCHANGED)
@@ -281,6 +412,7 @@ function unlockApp() {
     document.getElementById("verifiedPopup").style.display = "none";
     document.getElementById("chatApp").style.display = "flex";
     loadMessages();
+    loadQuotes();
   }, 2200);
 }
 
@@ -368,6 +500,260 @@ function dateLabel(d) {
 }
 
 /* =========================================
+   FILES: stored inside the SAME Firestore chat
+   (no Firebase Storage / no console changes)
+========================================= */
+const MAX_MB = 8;          // video / pdf limit
+const CHUNK = 800000;      // chars per chunk (multiple of 4)
+let mediaList = [];
+const urlCache = {};
+
+function fileKind(t) {
+  if (t.startsWith("image/")) return "image";
+  if (t.startsWith("video/")) return "video";
+  if (t === "application/pdf") return "pdf";
+  return null;
+}
+function kindLabel(k) { return k === "image" ? "📷 Photo" : k === "video" ? "🎥 Video" : "📄 PDF"; }
+function fmtSize(b) { return b > 1048576 ? (b / 1048576).toFixed(1) + " MB" : Math.max(1, Math.round((b || 0) / 1024)) + " KB"; }
+
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const src = URL.createObjectURL(file);
+    img.onerror = () => { URL.revokeObjectURL(src); reject(new Error("bad image")); };
+    img.onload = () => {
+      let dim = 1280, q = 0.8, tries = 0;
+      const attempt = () => {
+        const sc = Math.min(1, dim / Math.max(img.width, img.height));
+        const c = document.createElement("canvas");
+        c.width = Math.round(img.width * sc);
+        c.height = Math.round(img.height * sc);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob((b) => {
+          if (!b) { URL.revokeObjectURL(src); reject(new Error("compress failed")); return; }
+          if (b.size * 1.37 > 780000 && tries < 8) {
+            tries++;
+            if (q > 0.5) q -= 0.1; else { dim = Math.round(dim * 0.8); q = 0.7; }
+            attempt();
+            return;
+          }
+          URL.revokeObjectURL(src);
+          resolve(b);
+        }, "image/jpeg", q);
+      };
+      attempt();
+    };
+    img.src = src;
+  });
+}
+
+function toBase64(blob) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(String(r.result).split(",")[1]);
+    r.onerror = rej;
+    r.readAsDataURL(blob);
+  });
+}
+function b64ToBytes(b64) {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+
+async function getFileUrl(f) {
+  if (urlCache[f.id]) return urlCache[f.id];
+  let parts;
+  if (f.data) {
+    parts = [b64ToBytes(f.data)];
+  } else {
+    const snap = await getDocs(query(messagesRef, where("fileId", "==", f.id)));
+    const rows = [];
+    snap.forEach((d) => rows.push(d.data()));
+    rows.sort((a, b) => a.idx - b.idx);
+    if (rows.length !== f.chunks) throw new Error("missing parts");
+    parts = rows.map((r) => b64ToBytes(r.data));
+  }
+  const url = URL.createObjectURL(new Blob(parts, { type: f.mime }));
+  urlCache[f.id] = url;
+  return url;
+}
+
+document.getElementById("fileInput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  const kind = fileKind(file.type);
+  if (!kind) { alert("Sirf photo, video ya PDF bhej sakte hain."); return; }
+  if (kind !== "image" && file.size > MAX_MB * 1048576) {
+    alert("Video / PDF " + MAX_MB + " MB se choti honi chahiye.");
+    return;
+  }
+
+  const bar = document.getElementById("uploadBar");
+  const fill = document.getElementById("uploadFill");
+  try {
+    const user = await waitForFirebase();
+    bar.style.display = "block";
+    document.getElementById("uploadLabel").textContent = "Sending " + file.name + " 💗";
+    fill.style.width = "5%";
+
+    let blob = file, mime = file.type;
+    if (kind === "image") { blob = await compressImage(file); mime = "image/jpeg"; }
+    const b64 = await toBase64(blob);
+    const fileId = "f" + Date.now() + Math.random().toString(36).substring(2, 8);
+    const meta = { id: fileId, kind: kind, name: file.name, size: blob.size, mime: mime };
+
+    if (b64.length <= 800000) {
+      meta.data = b64;
+    } else {
+      const n = Math.ceil(b64.length / CHUNK);
+      meta.chunks = n;
+      for (let i = 0; i < n; i++) {
+        /* no createdAt on purpose: these parts never show up in the chat list */
+        await addDoc(messagesRef, {
+          fileId: fileId, idx: i, data: b64.slice(i * CHUNK, (i + 1) * CHUNK), senderId: user.uid
+        });
+        fill.style.width = Math.max(5, (i + 1) / n * 100) + "%";
+      }
+    }
+
+    const data = {
+      text: "",
+      senderId: user.uid,
+      deviceId: deviceId,
+      time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      createdAt: serverTimestamp(),
+      file: meta
+    };
+    if (replyTo) data.replyTo = { id: replyTo.id, text: replyTo.text.substring(0, 200), senderId: replyTo.senderId };
+    await addDoc(messagesRef, data);
+    cancelReply();
+  } catch (err) {
+    console.error("File send error:", err);
+    alert("File send nahi hui. Dobara try karo ya choti file bhejo.");
+  } finally {
+    bar.style.display = "none";
+  }
+});
+
+function buildThumb(f) {
+  const wrap = document.createElement("div");
+  wrap.style.position = "relative";
+  if (f.kind === "image" && f.data) {
+    const im = document.createElement("img");
+    im.src = "data:" + f.mime + ";base64," + f.data;
+    im.alt = ""; im.draggable = false;
+    wrap.appendChild(im);
+  } else {
+    const ph = document.createElement("div");
+    ph.className = "vidPh";
+    wrap.appendChild(ph);
+    const pl = document.createElement("div");
+    pl.className = "play"; pl.innerHTML = "<i></i>";
+    wrap.appendChild(pl);
+    const sz = document.createElement("span");
+    sz.className = "vidSz"; sz.textContent = "🎥 " + fmtSize(f.size);
+    wrap.appendChild(sz);
+  }
+  return wrap;
+}
+
+function buildMedia(f) {
+  if (f.kind === "pdf") {
+    const c = document.createElement("div");
+    c.className = "pdfCard";
+    c.innerHTML = '<div class="pdfIcon">PDF</div><div><b></b><small></small></div>';
+    c.querySelector("b").textContent = f.name || "document.pdf";
+    c.querySelector("small").textContent = fmtSize(f.size);
+    c.addEventListener("click", () => openViewer(f));
+    return c;
+  }
+  const m = document.createElement("div");
+  m.className = "media";
+  m.appendChild(buildThumb(f));
+  m.addEventListener("click", () => openViewer(f));
+  return m;
+}
+
+async function openViewer(f) {
+  const viewer = document.getElementById("viewer");
+  const body = document.getElementById("viewerBody");
+  let w = null;
+  if (f.kind === "pdf") {
+    w = window.open("", "_blank");   /* opened right away so phones don't block it */
+  } else {
+    body.innerHTML = '<div class="empty">Loading… 💗</div>';
+    viewer.style.display = "flex";
+  }
+  try {
+    const url = (f.kind === "image" && f.data) ? "data:" + f.mime + ";base64," + f.data : await getFileUrl(f);
+    if (f.kind === "pdf") {
+      if (w) w.location.href = url; else alert("Popup allow karo taake PDF khul sake.");
+      return;
+    }
+    body.innerHTML = "";
+    if (f.kind === "image") {
+      const im = document.createElement("img");
+      im.src = url; im.draggable = false;
+      body.appendChild(im);
+    } else {
+      const v = document.createElement("video");
+      v.src = url; v.controls = true; v.autoplay = true; v.playsInline = true;
+      v.setAttribute("controlsList", "nodownload noremoteplayback");
+      v.disablePictureInPicture = true;
+      body.appendChild(v);
+    }
+  } catch (err) {
+    console.error("Open file error:", err);
+    if (w) w.close();
+    closeViewer();
+    alert("File load nahi ho saki.");
+  }
+}
+window.closeViewer = function() {
+  document.getElementById("viewerBody").innerHTML = "";
+  document.getElementById("viewer").style.display = "none";
+};
+
+window.openVault = function() {
+  const grid = document.getElementById("vaultGrid");
+  grid.innerHTML = "";
+  if (!mediaList.length) {
+    const e = document.createElement("div");
+    e.className = "empty";
+    e.style.gridColumn = "1 / -1";
+    e.style.padding = "40px 0";
+    e.innerHTML = "Abhi koi photo, video ya PDF nahi 💌";
+    grid.appendChild(e);
+  }
+  mediaList.slice().reverse().forEach((f) => {
+    const it = document.createElement("div");
+    it.className = "vaultItem";
+    if (f.kind === "pdf") {
+      it.innerHTML = '<div class="pdfIcon">PDF</div><small></small>';
+      it.querySelector("small").textContent = f.name || "";
+    } else {
+      it.appendChild(buildThumb(f));
+    }
+    it.addEventListener("click", () => openViewer(f));
+    grid.appendChild(it);
+  });
+  document.getElementById("vault").style.display = "flex";
+};
+window.closeVault = function() { document.getElementById("vault").style.display = "none"; };
+
+/* Discourage casual saving (a web page can NOT block screenshots) */
+document.addEventListener("contextmenu", (e) => {
+  if (e.target.closest(".media,#viewer,.vaultItem,.pdfCard")) e.preventDefault();
+});
+document.addEventListener("visibilitychange", () => document.body.classList.toggle("hideMedia", document.hidden));
+window.addEventListener("blur", () => document.body.classList.add("hideMedia"));
+window.addEventListener("focus", () => document.body.classList.remove("hideMedia"));
+
+/* =========================================
    SEND MESSAGE (same fields + optional replyTo)
 ========================================= */
 window.sendMessage = async function() {
@@ -424,6 +810,7 @@ function loadMessages() {
   unsubscribeMessages = onSnapshot(q,
     (snapshot) => {
       chatArea.innerHTML = "";
+      mediaList = [];
 
       const welcome = document.createElement("div");
       welcome.className = "welcome";
@@ -443,7 +830,7 @@ function loadMessages() {
       snapshot.forEach((doc) => {
         const msg = doc.data({ serverTimestamps: "estimate" });
         const id = doc.id;
-        messageCache[id] = { text: msg.text || "", senderId: msg.senderId };
+        messageCache[id] = { text: msg.text || (msg.file ? kindLabel(msg.file.kind) : ""), senderId: msg.senderId };
 
         /* ---- date separator ---- */
         let when = null;
@@ -479,6 +866,8 @@ function loadMessages() {
           div.appendChild(quote);
         }
 
+        if (msg.file) { div.appendChild(buildMedia(msg.file)); mediaList.push(msg.file); }
+
         const text = document.createElement("span");
         text.className = "messageText";
         linkify(text, msg.text || "");
@@ -489,7 +878,7 @@ function loadMessages() {
           ? when.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
           : (msg.time || "");
 
-        div.appendChild(text);
+        if (msg.text) div.appendChild(text);
         div.appendChild(time);
 
         /* ---- reply button (desktop) ---- */
@@ -533,6 +922,121 @@ function loadMessages() {
     }
   );
 }
+
+/* =========================================
+   LOVE QUOTES (one for Mr, one for Mrs)
+   Stored as 2 special docs in the same collection.
+   No createdAt => they never appear in the chat list.
+========================================= */
+const QUOTE_MAX = 120;
+const quoteDocs = { mr: "quote_mr", mrs: "quote_mrs" };
+const quoteNames = { mr: "Mr Pagal", mrs: "Mrs Pagal" };
+let quotes = { mr: null, mrs: null };
+let quotesStarted = false;
+let stripIdx = 0;
+
+function loadQuotes() {
+  if (quotesStarted) return;
+  quotesStarted = true;
+  ["mr", "mrs"].forEach((role) => {
+    onSnapshot(doc(db, "mrPagalMessages", quoteDocs[role]),
+      (snap) => {
+        const d = snap.exists() ? snap.data() : null;
+        quotes[role] = d && d.text ? String(d.text) : null;
+        renderQuotes();
+      },
+      (err) => console.error("Quote listener error:", err));
+  });
+}
+
+function renderStrip() {
+  const el = document.getElementById("quoteStripText");
+  const items = ["mr", "mrs"].filter((r) => quotes[r]);
+  if (!items.length) { el.textContent = "Tap to write your love quote ✨"; return; }
+  const r = items[stripIdx % items.length];
+  el.textContent = (r === "mr" ? "💗 " : "💞 ") + quoteNames[r] + ": “" + quotes[r] + "”";
+}
+
+function renderQuotes() {
+  ["mr", "mrs"].forEach((r) => {
+    const t = document.getElementById("qtext-" + r);
+    if (quotes[r]) { t.textContent = "“" + quotes[r] + "”"; t.classList.remove("empty"); }
+    else { t.textContent = quoteNames[r] + " ki quote ka intezaar hai 💌"; t.classList.add("empty"); }
+  });
+  renderStrip();
+}
+
+setInterval(() => {
+  const el = document.getElementById("quoteStripText");
+  el.classList.add("out");
+  setTimeout(() => { stripIdx++; renderStrip(); el.classList.remove("out"); }, 300);
+}, 5000);
+
+let wallBuilt = false;
+function buildWallSparkles() {
+  if (wallBuilt) return;
+  wallBuilt = true;
+  const box = document.getElementById("wallSparks");
+  const cols = ["#ffd6f0", "#ff4fa3", "#ffd86b", "#5ee7ff", "#c58bff"];
+  for (let i = 0; i < 50; i++) {
+    const sp = document.createElement("div");
+    sp.className = "spark";
+    const sz = Math.random() * 4 + 2;
+    sp.style.cssText = "left:" + Math.random() * 100 + "%;top:" + Math.random() * 100 + "%;width:" + sz + "px;height:" + sz +
+      "px;background:" + cols[i % cols.length] + ";box-shadow:0 0 8px " + cols[i % cols.length] +
+      ";animation-delay:" + Math.random() * 3 + "s," + Math.random() * 6 + "s";
+    box.appendChild(sp);
+  }
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement("div");
+    h.className = "rise";
+    const sz = Math.random() * 14 + 12;
+    h.style.cssText = "left:" + Math.random() * 100 + "%;animation-delay:" + Math.random() * 9 + "s;animation-duration:" + (7 + Math.random() * 5) + "s";
+    h.innerHTML = '<svg width="' + sz + '" height="' + sz + '" viewBox="0 0 24 24" fill="' + cols[i % 3 + 1] + '"><path d="M12 21s-8-5.4-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 5.6-8 11-8 11z"/></svg>';
+    box.appendChild(h);
+  }
+}
+
+window.openWall = function() { buildWallSparkles(); renderQuotes(); document.getElementById("quoteWall").style.display = "block"; };
+window.closeWall = function() { document.getElementById("quoteWall").style.display = "none"; };
+
+function currentRole() { const r = localStorage.getItem("mrPagalRole"); return (r === "mr" || r === "mrs") ? r : null; }
+
+function paintEditor() {
+  const r = currentRole();
+  document.getElementById("roleMr").classList.toggle("on", r === "mr");
+  document.getElementById("roleMrs").classList.toggle("on", r === "mrs");
+  const inp = document.getElementById("qInput");
+  inp.value = r && quotes[r] ? quotes[r] : "";
+  document.getElementById("qCount").textContent = inp.value.length + "/" + QUOTE_MAX;
+}
+window.setRole = function(r) { localStorage.setItem("mrPagalRole", r); paintEditor(); };
+window.openEditor = function() { paintEditor(); document.getElementById("qEditor").style.display = "flex"; };
+window.closeEditor = function() { document.getElementById("qEditor").style.display = "none"; };
+document.getElementById("qInput").addEventListener("input", (e) => {
+  document.getElementById("qCount").textContent = e.target.value.length + "/" + QUOTE_MAX;
+});
+
+window.saveQuote = async function() {
+  const role = currentRole();
+  if (!role) { alert("Pehle chuno: Mr Pagal ya Mrs Pagal 💗"); return; }
+  const text = document.getElementById("qInput").value.replace(/\s+/g, " ").trim().slice(0, QUOTE_MAX);
+  if (!text) { alert("Pehle ek pyaari si line likho 💌"); return; }
+  const btn = document.getElementById("qSave");
+  try {
+    const user = await waitForFirebase();
+    btn.disabled = true;
+    await setDoc(doc(db, "mrPagalMessages", quoteDocs[role]), {
+      role: role, text: text, senderId: user.uid, updatedAt: serverTimestamp()
+    });
+    closeEditor();
+  } catch (err) {
+    console.error("Quote save error:", err);
+    alert("Quote save nahi hui. Firebase Firestore Rules check karo.");
+  } finally {
+    btn.disabled = false;
+  }
+};
 
 /* ENTER TO SEND */
 document.getElementById("messageInput").addEventListener("keydown", function(e) {
