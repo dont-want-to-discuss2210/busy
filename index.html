@@ -164,6 +164,14 @@ button{border:none;cursor:pointer;font-family:inherit}
 .pastQ{font-family:"Dancing Script",cursive,Poppins,sans-serif;font-size:22px;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 10px var(--c)}
 .pastBy{margin-top:8px;font-size:11px;color:var(--c);filter:brightness(1.4)}
 .pastWhen{font-size:10px;opacity:.6;margin-top:2px}
+/* QUICK REPLY NOTES (tiny reply attached under a message, like a reaction) */
+.notes{display:none;position:absolute;flex-direction:column;gap:4px;max-width:100%;z-index:1}
+.message.sent .notes{right:8px;align-items:flex-end}
+.message.received .notes{left:8px;align-items:flex-start}
+.tn{display:flex;align-items:baseline;gap:6px;max-width:240px;padding:4px 10px;border-radius:14px;font-size:11px;line-height:1.3;background:#251634;border:1px solid #4b3160;box-shadow:0 2px 8px rgba(0,0,0,.35);overflow-wrap:anywhere}
+.tn b{flex:none;font-size:9px;color:#ff9bc9;font-weight:600}
+.tn.mine{border-color:#ff5fa8;background:#3b1f4f;cursor:pointer}
+.noteInput{text-align:left;letter-spacing:0;font-size:13px;padding:10px 12px;min-width:230px;margin-bottom:6px}
 /* EMOJI IMAGES (same look on every device) */
 img.emoji{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;margin:0 .04em;-webkit-user-drag:none;user-select:none}
 .noemoji{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
@@ -182,7 +190,7 @@ img.emoji{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;m
 .rmEmojis button:hover,.rmEmojis button:active{transform:scale(1.3)}
 .rmEmojis button.on{background:rgba(255,95,168,.3)}
 .rmActs{display:flex;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.1)}
-.rmActs button{flex:1;background:#3a2150;color:#fff;border-radius:14px;padding:7px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.rmActs button{flex:1;background:#3a2150;color:#fff;border-radius:14px;padding:7px 8px;font-size:11px;white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:6px}
 .heartPop{position:absolute;left:50%;top:50%;font-size:46px;pointer-events:none;animation:heartPop .8s ease forwards;z-index:3}
 @keyframes heartPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:1;transform:translate(-50%,-60%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-140%) scale(1)}}
 @media (prefers-reduced-motion:reduce){.qCard,.bolt,.flashO,.spark,.rise,#quoteWall{animation:none}}
@@ -631,6 +639,9 @@ function loadMessages() {
         const rc = document.createElement("div");
         rc.className = "reacts";
         div.appendChild(rc);
+        const nc = document.createElement("div");
+        nc.className = "notes";
+        div.appendChild(nc);
 
         /* ---- hover button (desktop): react / reply / copy ---- */
         const rb = document.createElement("button");
@@ -882,25 +893,39 @@ let reactionsStarted = false;
 let menuOpenedAt = 0;
 let lastHeart = { id: "", t: 0 };
 
+const NOTE_MAX = 40;
+let noteMap = {};
+
 function loadReactions() {
   if (reactionsStarted) return;
   reactionsStarted = true;
   onSnapshot(query(messagesRef, where("isReaction", "==", true)),
     (snap) => {
-      const latest = {};
+      const latestE = {}, latestN = {};
       snap.forEach((d) => {
         const x = d.data({ serverTimestamps: "estimate" });
         if (!x.msgId || !x.senderId) return;
         const t = x.reactedAt && x.reactedAt.toMillis ? x.reactedAt.toMillis() : Date.now();
         const k = x.msgId + "|" + x.senderId;
-        if (!latest[k] || t >= latest[k].t) latest[k] = { msgId: x.msgId, sender: x.senderId, emoji: x.emoji || "", t: t };
+        if (typeof x.note === "string") {
+          if (!latestN[k] || t >= latestN[k].t) latestN[k] = { msgId: x.msgId, sender: x.senderId, v: x.note, t: t };
+        } else {
+          if (!latestE[k] || t >= latestE[k].t) latestE[k] = { msgId: x.msgId, sender: x.senderId, v: x.emoji || "", t: t };
+        }
       });
       reactionMap = {};
-      Object.keys(latest).forEach((k) => {
-        const r = latest[k];
-        if (!r.emoji) return;
+      noteMap = {};
+      Object.keys(latestE).forEach((k) => {
+        const r = latestE[k];
+        if (!r.v) return;
         if (!reactionMap[r.msgId]) reactionMap[r.msgId] = {};
-        reactionMap[r.msgId][r.sender] = r.emoji;
+        reactionMap[r.msgId][r.sender] = r.v;
+      });
+      Object.keys(latestN).forEach((k) => {
+        const r = latestN[k];
+        if (!r.v) return;
+        if (!noteMap[r.msgId]) noteMap[r.msgId] = {};
+        noteMap[r.msgId][r.sender] = r.v;
       });
       renderReactions();
     },
@@ -914,26 +939,68 @@ function myReaction(id) {
 
 function renderReactions() {
   document.querySelectorAll(".message").forEach((div) => {
+    const id = div.id.slice(4);
     const box = div.querySelector(".reacts");
-    if (!box) return;
-    const m = reactionMap[div.id.slice(4)];
+    const nbox = div.querySelector(".notes");
+    if (!box || !nbox) return;
+
+    /* emoji pills */
+    const m = reactionMap[id];
     box.innerHTML = "";
-    if (!m || !Object.keys(m).length) { box.style.display = "none"; div.classList.remove("hasReact"); return; }
-    const counts = {};
-    let mine = "";
-    Object.keys(m).forEach((uid) => {
-      counts[m[uid]] = (counts[m[uid]] || 0) + 1;
-      if (currentUser && uid === currentUser.uid) mine = m[uid];
+    let hasEmoji = false;
+    if (m && Object.keys(m).length) {
+      hasEmoji = true;
+      const counts = {};
+      let mine = "";
+      Object.keys(m).forEach((uid) => {
+        counts[m[uid]] = (counts[m[uid]] || 0) + 1;
+        if (currentUser && uid === currentUser.uid) mine = m[uid];
+      });
+      Object.keys(counts).forEach((em) => {
+        const sp = document.createElement("span");
+        sp.className = "rx" + (mine === em ? " mine" : "");
+        sp.textContent = em + (counts[em] > 1 ? " " + counts[em] : "");
+        box.appendChild(sp);
+      });
+      box.style.display = "flex";
+      div.classList.add("hasReact");
+    } else {
+      box.style.display = "none";
+      div.classList.remove("hasReact");
+    }
+
+    /* tiny quick-reply notes */
+    const nm = noteMap[id];
+    const uids = nm ? Object.keys(nm) : [];
+    nbox.innerHTML = "";
+    if (!uids.length) { nbox.style.display = "none"; div.style.marginBottom = ""; return; }
+    uids.forEach((uid) => {
+      const isMine = currentUser && uid === currentUser.uid;
+      const chip = document.createElement("div");
+      chip.className = "tn" + (isMine ? " mine" : "");
+      const who = document.createElement("b");
+      who.textContent = senderName(uid);
+      const tx = document.createElement("span");
+      tx.textContent = nm[uid];
+      chip.appendChild(who); chip.appendChild(tx);
+      if (isMine) chip.addEventListener("click", (e) => { e.stopPropagation(); openNoteEditor(id, div); });
+      nbox.appendChild(chip);
     });
-    Object.keys(counts).forEach((em) => {
-      const sp = document.createElement("span");
-      sp.className = "rx" + (mine === em ? " mine" : "");
-      sp.textContent = em + (counts[em] > 1 ? " " + counts[em] : "");
-      box.appendChild(sp);
-    });
-    box.style.display = "flex";
-    div.classList.add("hasReact");
+    const off = hasEmoji ? 18 : 6;
+    nbox.style.top = "calc(100% + " + off + "px)";
+    nbox.style.display = "flex";
+    div.style.marginBottom = (off + uids.length * 28 + 4) + "px";
   });
+}
+
+async function setNote(msgId, text) {
+  try {
+    const user = await waitForFirebase();
+    await addDoc(messagesRef, { isReaction: true, msgId: msgId, note: text, senderId: user.uid, reactedAt: serverTimestamp() });
+  } catch (err) {
+    console.error("Quick reply error:", err);
+    alert("Couldn’t send the quick reply. Please try again.");
+  }
 }
 
 async function setReaction(msgId, emoji) {
@@ -972,6 +1039,58 @@ function copyText(t) {
 
 function closeReactMenu() { document.getElementById("reactMenu").style.display = "none"; }
 
+function placeMenu(el, nearTop) {
+  const m = document.getElementById("reactMenu");
+  m.style.display = "block";
+  menuOpenedAt = Date.now();
+  const r = el.getBoundingClientRect();
+  const mw = m.offsetWidth, mh = m.offsetHeight;
+  let top = r.top - mh - 8;
+  if (top < 70) top = r.bottom + 8;
+  if (nearTop) top = Math.min(top, window.innerHeight * 0.3);
+  top = Math.max(8, Math.min(top, window.innerHeight - mh - 8));
+  let left = el.classList.contains("sent") ? r.right - mw : r.left;
+  left = Math.max(8, Math.min(left, window.innerWidth - mw - 8));
+  m.style.top = top + "px";
+  m.style.left = left + "px";
+}
+
+function openNoteEditor(id, el) {
+  const m = document.getElementById("reactMenu");
+  const mineNote = (noteMap[id] && currentUser && noteMap[id][currentUser.uid]) || "";
+  m.innerHTML = "";
+  const inp = document.createElement("input");
+  inp.type = "text";
+  inp.className = "noteInput";
+  inp.maxLength = NOTE_MAX;
+  inp.placeholder = "Quick reply (short & sweet)...";
+  inp.value = mineNote;
+  inp.autocomplete = "off";
+  const send = () => {
+    const v = inp.value.replace(/\s+/g, " ").trim().slice(0, NOTE_MAX);
+    closeReactMenu();
+    if (v) setNote(id, v); else if (mineNote) setNote(id, "");
+  };
+  inp.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); send(); } });
+  const acts = document.createElement("div");
+  acts.className = "rmActs";
+  acts.style.borderTop = "none"; acts.style.marginTop = "0"; acts.style.paddingTop = "0";
+  const ok = document.createElement("button");
+  ok.textContent = "Send";
+  ok.addEventListener("click", (e) => { e.stopPropagation(); send(); });
+  acts.appendChild(ok);
+  if (mineNote) {
+    const rm = document.createElement("button");
+    rm.textContent = "Remove";
+    rm.addEventListener("click", (e) => { e.stopPropagation(); closeReactMenu(); setNote(id, ""); });
+    acts.appendChild(rm);
+  }
+  m.appendChild(inp);
+  m.appendChild(acts);
+  placeMenu(el, true);
+  inp.focus();
+}
+
 function openReactMenu(id, el) {
   const m = document.getElementById("reactMenu");
   const mine = myReaction(id);
@@ -990,27 +1109,19 @@ function openReactMenu(id, el) {
   const acts = document.createElement("div");
   acts.className = "rmActs";
   const rep = document.createElement("button");
-  rep.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg><span>Reply</span>';
+  rep.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg><span>Reply</span>';
   rep.addEventListener("click", (e) => { e.stopPropagation(); closeReactMenu(); startReply(id); });
+  const qr = document.createElement("button");
+  qr.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.5 7.2L4 20l1-4.5A8 8 0 1 1 21 12z"/></svg><span>Quick reply</span>';
+  qr.addEventListener("click", (e) => { e.stopPropagation(); openNoteEditor(id, el); });
   const cp = document.createElement("button");
-  cp.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copy</span>';
+  cp.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copy</span>';
   cp.addEventListener("click", (e) => { e.stopPropagation(); closeReactMenu(); copyText((messageCache[id] && messageCache[id].text) || ""); });
-  acts.appendChild(rep); acts.appendChild(cp);
+  acts.appendChild(rep); acts.appendChild(qr); acts.appendChild(cp);
 
   m.appendChild(row);
   m.appendChild(acts);
-  m.style.display = "block";
-  menuOpenedAt = Date.now();
-
-  const r = el.getBoundingClientRect();
-  const mw = m.offsetWidth, mh = m.offsetHeight;
-  let top = r.top - mh - 8;
-  if (top < 70) top = r.bottom + 8;
-  top = Math.max(8, Math.min(top, window.innerHeight - mh - 8));
-  let left = el.classList.contains("sent") ? r.right - mw : r.left;
-  left = Math.max(8, Math.min(left, window.innerWidth - mw - 8));
-  m.style.top = top + "px";
-  m.style.left = left + "px";
+  placeMenu(el, false);
 }
 
 document.addEventListener("click", (e) => {
