@@ -164,6 +164,27 @@ button{border:none;cursor:pointer;font-family:inherit}
 .pastQ{font-family:"Dancing Script",cursive,Poppins,sans-serif;font-size:22px;line-height:1.35;overflow-wrap:anywhere;text-shadow:0 0 10px var(--c)}
 .pastBy{margin-top:8px;font-size:11px;color:var(--c);filter:brightness(1.4)}
 .pastWhen{font-size:10px;opacity:.6;margin-top:2px}
+/* EMOJI IMAGES (same look on every device) */
+img.emoji{display:inline-block;width:1.15em;height:1.15em;vertical-align:-.2em;margin:0 .04em;-webkit-user-drag:none;user-select:none}
+.noemoji{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+
+/* REACTIONS */
+.message{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.message.hasReact{margin-bottom:12px}
+.reacts{display:none;position:absolute;bottom:-13px;gap:4px}
+.message.sent .reacts{right:12px}
+.message.received .reacts{left:12px}
+.rx{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:12px;background:#2a1839;border:1px solid #4b3160;font-size:12px;line-height:1.2;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.rx.mine{border-color:#ff5fa8;background:#3b1f4f}
+#reactMenu{display:none;position:fixed;z-index:40;background:#2a1839;border:1px solid #ff75b8;border-radius:22px;padding:8px 10px;box-shadow:0 8px 30px rgba(0,0,0,.55);animation:messageIn .15s ease}
+.rmEmojis{display:flex;gap:2px}
+.rmEmojis button{background:none;color:#fff;font-size:24px;padding:4px 5px;border-radius:50%;transition:transform .12s}
+.rmEmojis button:hover,.rmEmojis button:active{transform:scale(1.3)}
+.rmEmojis button.on{background:rgba(255,95,168,.3)}
+.rmActs{display:flex;gap:6px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.1)}
+.rmActs button{flex:1;background:#3a2150;color:#fff;border-radius:14px;padding:7px 10px;font-size:12px;display:flex;align-items:center;justify-content:center;gap:6px}
+.heartPop{position:absolute;left:50%;top:50%;font-size:46px;pointer-events:none;animation:heartPop .8s ease forwards;z-index:3}
+@keyframes heartPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}30%{opacity:1;transform:translate(-50%,-60%) scale(1.3)}100%{opacity:0;transform:translate(-50%,-140%) scale(1)}}
 @media (prefers-reduced-motion:reduce){.qCard,.bolt,.flashO,.spark,.rise,#quoteWall{animation:none}}
 </style>
 </head>
@@ -283,6 +304,8 @@ button{border:none;cursor:pointer;font-family:inherit}
   </div>
 </div>
 
+<div id="reactMenu"></div>
+
 <script type="module">
 
 /* =========================================
@@ -391,6 +414,7 @@ function unlockApp() {
     document.getElementById("chatApp").style.display = "flex";
     loadMessages();
     loadQuotes();
+    loadReactions();
   }, 2200);
 }
 
@@ -603,34 +627,55 @@ function loadMessages() {
         div.appendChild(time);
 
         /* ---- reply button (desktop) ---- */
+        /* ---- reactions pill (filled by renderReactions) ---- */
+        const rc = document.createElement("div");
+        rc.className = "reacts";
+        div.appendChild(rc);
+
+        /* ---- hover button (desktop): react / reply / copy ---- */
         const rb = document.createElement("button");
         rb.className = "replyBtn";
-        rb.innerHTML = '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg>';
-        rb.title = "Reply";
-        rb.addEventListener("click", (e) => { e.stopPropagation(); startReply(id); });
+        rb.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5s1.5 2 4 2 4-2 4-2"/><path d="M9 9.5h.01M15 9.5h.01"/></svg>';
+        rb.title = "React";
+        rb.addEventListener("click", (e) => { e.stopPropagation(); openReactMenu(id, div); });
         div.appendChild(rb);
 
-        /* ---- swipe to reply (mobile) ---- */
-        let sx = 0, sy = 0, dx = 0, swiping = false;
+        div.addEventListener("dblclick", () => toggleHeart(id, div));
+
+        /* ---- touch: swipe = reply, double tap = ❤️, long press = menu ---- */
+        let sx = 0, sy = 0, dx = 0, swiping = false, moved = false, fired = false, lastTap = 0, pressTimer = null;
         div.addEventListener("touchstart", (e) => {
-          sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; swiping = true;
+          sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; swiping = true; moved = false; fired = false;
+          clearTimeout(pressTimer);
+          pressTimer = setTimeout(() => {
+            if (!moved) { fired = true; if (navigator.vibrate) navigator.vibrate(15); openReactMenu(id, div); }
+          }, 450);
         }, { passive: true });
         div.addEventListener("touchmove", (e) => {
           if (!swiping) return;
           dx = e.touches[0].clientX - sx;
           const dy = Math.abs(e.touches[0].clientY - sy);
+          if (Math.abs(dx) > 8 || dy > 8) { moved = true; clearTimeout(pressTimer); }
           if (dy > 30) { swiping = false; div.style.transform = ""; return; }
           if (dx > 0) div.style.transform = "translateX(" + Math.min(dx, 70) + "px)";
         }, { passive: true });
         div.addEventListener("touchend", () => {
+          clearTimeout(pressTimer);
           div.style.transform = "";
-          if (swiping && dx > 60) startReply(id);
+          if (fired) { swiping = false; return; }
+          if (swiping && dx > 60) {
+            startReply(id);
+          } else if (!moved) {
+            const now = Date.now();
+            if (now - lastTap < 320) { toggleHeart(id, div); lastTap = 0; } else { lastTap = now; }
+          }
           swiping = false;
         });
 
         chatArea.appendChild(div);
       });
 
+      renderReactions();
       chatArea.scrollTop = chatArea.scrollHeight;
     },
     (error) => {
@@ -823,6 +868,230 @@ window.saveQuote = async function() {
     btn.disabled = false;
   }
 };
+
+/* =========================================
+   REACTIONS (like Instagram)
+   Each reaction is a small doc: { isReaction, msgId, emoji, senderId, reactedAt }
+   The newest one per person per message wins. emoji "" = reaction removed.
+   No createdAt, so it never shows in the chat list.
+========================================= */
+const HEART = "\u2764\uFE0F";
+const REACTS = [HEART, "😂", "😮", "😢", "🥰", "🔥", "👍"];
+let reactionMap = {};
+let reactionsStarted = false;
+let menuOpenedAt = 0;
+let lastHeart = { id: "", t: 0 };
+
+function loadReactions() {
+  if (reactionsStarted) return;
+  reactionsStarted = true;
+  onSnapshot(query(messagesRef, where("isReaction", "==", true)),
+    (snap) => {
+      const latest = {};
+      snap.forEach((d) => {
+        const x = d.data({ serverTimestamps: "estimate" });
+        if (!x.msgId || !x.senderId) return;
+        const t = x.reactedAt && x.reactedAt.toMillis ? x.reactedAt.toMillis() : Date.now();
+        const k = x.msgId + "|" + x.senderId;
+        if (!latest[k] || t >= latest[k].t) latest[k] = { msgId: x.msgId, sender: x.senderId, emoji: x.emoji || "", t: t };
+      });
+      reactionMap = {};
+      Object.keys(latest).forEach((k) => {
+        const r = latest[k];
+        if (!r.emoji) return;
+        if (!reactionMap[r.msgId]) reactionMap[r.msgId] = {};
+        reactionMap[r.msgId][r.sender] = r.emoji;
+      });
+      renderReactions();
+    },
+    (err) => console.error("Reactions listener error:", err));
+}
+
+function myReaction(id) {
+  const m = reactionMap[id];
+  return (m && currentUser && m[currentUser.uid]) || "";
+}
+
+function renderReactions() {
+  document.querySelectorAll(".message").forEach((div) => {
+    const box = div.querySelector(".reacts");
+    if (!box) return;
+    const m = reactionMap[div.id.slice(4)];
+    box.innerHTML = "";
+    if (!m || !Object.keys(m).length) { box.style.display = "none"; div.classList.remove("hasReact"); return; }
+    const counts = {};
+    let mine = "";
+    Object.keys(m).forEach((uid) => {
+      counts[m[uid]] = (counts[m[uid]] || 0) + 1;
+      if (currentUser && uid === currentUser.uid) mine = m[uid];
+    });
+    Object.keys(counts).forEach((em) => {
+      const sp = document.createElement("span");
+      sp.className = "rx" + (mine === em ? " mine" : "");
+      sp.textContent = em + (counts[em] > 1 ? " " + counts[em] : "");
+      box.appendChild(sp);
+    });
+    box.style.display = "flex";
+    div.classList.add("hasReact");
+  });
+}
+
+async function setReaction(msgId, emoji) {
+  try {
+    const user = await waitForFirebase();
+    await addDoc(messagesRef, { isReaction: true, msgId: msgId, emoji: emoji, senderId: user.uid, reactedAt: serverTimestamp() });
+  } catch (err) {
+    console.error("Reaction error:", err);
+    alert("Couldn’t send the reaction. Please try again.");
+  }
+}
+
+function toggleHeart(id, div) {
+  const now = Date.now();
+  if (lastHeart.id === id && now - lastHeart.t < 600) return;   /* ignore duplicate dblclick + touch */
+  lastHeart = { id: id, t: now };
+  if (myReaction(id) !== HEART) {
+    const pop = document.createElement("div");
+    pop.className = "heartPop";
+    pop.textContent = HEART;
+    div.appendChild(pop);
+    setTimeout(() => pop.remove(), 850);
+    setReaction(id, HEART);
+  } else {
+    setReaction(id, "");
+  }
+}
+
+function copyText(t) {
+  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).catch(() => {}); return; }
+  const ta = document.createElement("textarea");
+  ta.value = t; document.body.appendChild(ta); ta.select();
+  try { document.execCommand("copy"); } catch (e) {}
+  ta.remove();
+}
+
+function closeReactMenu() { document.getElementById("reactMenu").style.display = "none"; }
+
+function openReactMenu(id, el) {
+  const m = document.getElementById("reactMenu");
+  const mine = myReaction(id);
+  m.innerHTML = "";
+
+  const row = document.createElement("div");
+  row.className = "rmEmojis";
+  REACTS.forEach((em) => {
+    const b = document.createElement("button");
+    b.textContent = em;
+    if (mine === em) b.className = "on";
+    b.addEventListener("click", (e) => { e.stopPropagation(); setReaction(id, mine === em ? "" : em); closeReactMenu(); });
+    row.appendChild(b);
+  });
+
+  const acts = document.createElement("div");
+  acts.className = "rmActs";
+  const rep = document.createElement("button");
+  rep.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 6 6v3"/></svg><span>Reply</span>';
+  rep.addEventListener("click", (e) => { e.stopPropagation(); closeReactMenu(); startReply(id); });
+  const cp = document.createElement("button");
+  cp.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span>Copy</span>';
+  cp.addEventListener("click", (e) => { e.stopPropagation(); closeReactMenu(); copyText((messageCache[id] && messageCache[id].text) || ""); });
+  acts.appendChild(rep); acts.appendChild(cp);
+
+  m.appendChild(row);
+  m.appendChild(acts);
+  m.style.display = "block";
+  menuOpenedAt = Date.now();
+
+  const r = el.getBoundingClientRect();
+  const mw = m.offsetWidth, mh = m.offsetHeight;
+  let top = r.top - mh - 8;
+  if (top < 70) top = r.bottom + 8;
+  top = Math.max(8, Math.min(top, window.innerHeight - mh - 8));
+  let left = el.classList.contains("sent") ? r.right - mw : r.left;
+  left = Math.max(8, Math.min(left, window.innerWidth - mw - 8));
+  m.style.top = top + "px";
+  m.style.left = left + "px";
+}
+
+document.addEventListener("click", (e) => {
+  if (Date.now() - menuOpenedAt < 400) return;
+  if (!e.target.closest("#reactMenu")) closeReactMenu();
+});
+document.getElementById("chatArea").addEventListener("scroll", closeReactMenu);
+
+/* =========================================
+   EMOJI AS IMAGES (Twemoji) - no more boxes
+   If an image can't load, the normal emoji text is shown instead.
+========================================= */
+let EMOJI_RE = null;
+try {
+  const B = "(?:\\p{Emoji_Presentation}|\\p{Extended_Pictographic}\\uFE0F)\\p{Emoji_Modifier}?";
+  const Z = "(?:\\p{Emoji_Presentation}|\\p{Extended_Pictographic})\\uFE0F?\\p{Emoji_Modifier}?";
+  EMOJI_RE = new RegExp("\\p{Regional_Indicator}{2}|[#*0-9]\\uFE0F?\\u20E3|" + B + "(?:\\u200D" + Z + ")*", "gu");
+} catch (e) { EMOJI_RE = null; }
+
+function emojiCode(e) {
+  const cps = [];
+  for (const ch of e) cps.push(ch.codePointAt(0).toString(16));
+  const keep = e.indexOf("\u200D") !== -1;
+  return (keep ? cps : cps.filter((c) => c !== "fe0f")).join("-");
+}
+
+function emojiParentOk(t) {
+  const p = t.parentNode;
+  if (!p || p.nodeType !== 1) return false;
+  if (/^(SCRIPT|STYLE|TEXTAREA|INPUT|NOSCRIPT)$/.test(p.tagName)) return false;
+  return !p.closest(".noemoji");
+}
+
+function convertTextNode(n) {
+  const t = n.nodeValue;
+  if (!t) return;
+  EMOJI_RE.lastIndex = 0;
+  if (!EMOJI_RE.test(t)) return;
+  EMOJI_RE.lastIndex = 0;
+  const frag = document.createDocumentFragment();
+  let last = 0, m;
+  while ((m = EMOJI_RE.exec(t)) !== null) {
+    if (m.index > last) frag.appendChild(document.createTextNode(t.slice(last, m.index)));
+    const img = document.createElement("img");
+    img.className = "emoji";
+    img.alt = m[0];
+    img.draggable = false;
+    img.src = "https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/" + emojiCode(m[0]) + ".svg";
+    img.onerror = function() {
+      const sp = document.createElement("span");
+      sp.className = "noemoji";
+      sp.textContent = this.alt;
+      this.replaceWith(sp);
+    };
+    frag.appendChild(img);
+    last = m.index + m[0].length;
+  }
+  if (last < t.length) frag.appendChild(document.createTextNode(t.slice(last)));
+  n.parentNode.replaceChild(frag, n);
+}
+
+function convertNode(root) {
+  if (!EMOJI_RE) return;
+  if (root.nodeType === 3) { if (emojiParentOk(root)) convertTextNode(root); return; }
+  if (root.nodeType !== 1) return;
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const list = [];
+  let n;
+  while ((n = w.nextNode())) list.push(n);
+  list.forEach((t) => { if (emojiParentOk(t)) convertTextNode(t); });
+}
+
+if (EMOJI_RE) {
+  new MutationObserver((muts) => {
+    muts.forEach((m) => {
+      m.addedNodes.forEach(convertNode);
+      if (m.type === "characterData") convertNode(m.target);
+    });
+  }).observe(document.body, { childList: true, subtree: true, characterData: true });
+  convertNode(document.body);
+}
 
 /* ENTER TO SEND */
 document.getElementById("messageInput").addEventListener("keydown", function(e) {
