@@ -709,8 +709,10 @@ function loadMessages() {
 const QUOTE_MAX = 120;
 const quoteDocs = { mr: "quote_mr", mrs: "quote_mrs" };
 const quoteNames = { mr: "Mr Pagal", mrs: "Mrs Pagal" };
-let quotes = { mr: null, mrs: null };
-let pastAll = [];
+let quotes = { mr: null, mrs: null };   // newest quote of each person: { text, when }
+let pastAll = [];                        // every older quote
+let curDocs = { mr: null, mrs: null };   // old-style "current" docs (kept so nothing is lost)
+let histAll = [];                        // every quote ever posted
 let quotesStarted = false;
 
 function tsToDate(t) { return t && t.toDate ? t.toDate() : null; }
@@ -720,29 +722,50 @@ function fmtWhen(d) {
          d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
+/* Posting a quote only CREATES a new doc (same as sending a message), so no
+   "update" permission is needed. The newest quote of each person is the one
+   shown; all older ones go to Past Quotes. */
+function computeQuotes() {
+  const entries = histAll.slice();
+  ["mr", "mrs"].forEach((r) => {
+    const c = curDocs[r];
+    if (c && c.text && !(c.histId && histAll.some((h) => h.id === c.histId))) {
+      entries.push({ id: "cur_" + r, role: r, text: String(c.text), when: tsToDate(c.updatedAt) });
+    }
+  });
+  entries.sort((a, b) => (b.when || 0) - (a.when || 0));
+  quotes = { mr: null, mrs: null };
+  pastAll = [];
+  entries.forEach((e) => {
+    const r = e.role === "mrs" ? "mrs" : "mr";
+    if (!quotes[r]) quotes[r] = { text: e.text, when: e.when };
+    else pastAll.push(e);
+  });
+  renderQuotes();
+  renderPast();
+}
+
 function loadQuotes() {
   if (quotesStarted) return;
   quotesStarted = true;
   ["mr", "mrs"].forEach((role) => {
     onSnapshot(doc(db, "mrPagalMessages", quoteDocs[role]),
       (snap) => {
-        const d = snap.exists() ? snap.data({ serverTimestamps: "estimate" }) : null;
-        quotes[role] = d && d.text ? d : null;
-        renderQuotes();
-        renderPast();
+        curDocs[role] = snap.exists() ? snap.data({ serverTimestamps: "estimate" }) : null;
+        computeQuotes();
       },
       (err) => console.error("Quote listener error:", err));
   });
   onSnapshot(query(messagesRef, where("isQuote", "==", true)),
     (snap) => {
-      pastAll = [];
+      histAll = [];
       snap.forEach((d) => {
         const x = d.data({ serverTimestamps: "estimate" });
-        if (x.text) pastAll.push({ id: d.id, role: x.role, text: String(x.text), when: tsToDate(x.savedAt) });
+        if (x.text) histAll.push({ id: d.id, role: x.role, text: String(x.text), when: tsToDate(x.savedAt) });
       });
-      renderPast();
+      computeQuotes();
     },
-    (err) => console.error("Past quotes listener error:", err));
+    (err) => console.error("Quotes listener error:", err));
 }
 
 function renderQuotes() {
@@ -750,36 +773,34 @@ function renderQuotes() {
     const q = quotes[r];
     const t = document.getElementById("qtext-" + r);
     const w = document.getElementById("qwhen-" + r);
-    const s = document.getElementById("qs-" + r);
+    const sp = document.getElementById("qs-" + r);
     if (q) {
       t.textContent = "“" + q.text + "”";
       t.classList.remove("empty");
-      w.textContent = fmtWhen(tsToDate(q.updatedAt));
-      s.textContent = "“" + q.text + "”";
-      s.parentElement.classList.remove("none");
+      w.textContent = fmtWhen(q.when);
+      sp.textContent = "“" + q.text + "”";
+      sp.parentElement.classList.remove("none");
     } else {
       t.textContent = quoteNames[r] + " hasn’t written a quote yet 💌";
       t.classList.add("empty");
       w.textContent = "";
-      s.textContent = "Waiting for a quote…";
-      s.parentElement.classList.add("none");
+      sp.textContent = "Waiting for a quote…";
+      sp.parentElement.classList.add("none");
     }
   });
 }
 
 function renderPast() {
   const box = document.getElementById("pastList");
-  const current = new Set(["mr", "mrs"].map((r) => quotes[r] && quotes[r].histId).filter(Boolean));
-  const list = pastAll.filter((x) => !current.has(x.id)).sort((a, b) => (b.when || 0) - (a.when || 0));
   box.innerHTML = "";
-  if (!list.length) {
+  if (!pastAll.length) {
     const e = document.createElement("div");
     e.className = "empty";
     e.innerHTML = "No past quotes yet 💌<br>When a new quote is posted, the old one will be saved here.";
     box.appendChild(e);
     return;
   }
-  list.forEach((x) => {
+  pastAll.forEach((x) => {
     const c = document.createElement("div");
     c.className = "pastCard " + (x.role === "mrs" ? "mrs" : "mr");
     const q = document.createElement("div");
@@ -851,30 +872,14 @@ window.saveQuote = async function() {
   try {
     const user = await waitForFirebase();
     btn.disabled = true;
-    const old = quotes[role];
-    const histRef = doc(messagesRef);
-
-    /* an older quote written before history existed goes to Past Quotes too */
-    if (old && !old.histId) {
-      try {
-        await setDoc(doc(messagesRef), {
-          isQuote: true, role: role, text: old.text,
-          senderId: old.senderId || user.uid, savedAt: old.updatedAt || serverTimestamp()
-        });
-      } catch (e) { console.error("Archive old quote error:", e); }
-    }
-
-    await setDoc(doc(db, "mrPagalMessages", quoteDocs[role]), {
-      role: role, text: text, senderId: user.uid, updatedAt: serverTimestamp(), histId: histRef.id
+    /* only creates a new doc, like sending a message */
+    await addDoc(messagesRef, {
+      isQuote: true, role: role, text: text, senderId: user.uid, savedAt: serverTimestamp()
     });
-    try {
-      await setDoc(histRef, { isQuote: true, role: role, text: text, senderId: user.uid, savedAt: serverTimestamp() });
-    } catch (e) { console.error("Save to history error:", e); }
-
     closeEditor();
   } catch (err) {
     console.error("Quote save error:", err);
-    alert("Couldn’t save the quote. Please check your Firestore rules.");
+    alert("Couldn’t save the quote (" + (err && err.code ? err.code : "error") + "). Please try again.");
   } finally {
     btn.disabled = false;
   }
